@@ -1,0 +1,11 @@
+xaringan::moon_reader:
+  includes:
+    in_header:
+      - assets/load-fa.html
+  lib_dir: assets/libs/
+  css: ["assets/xaringan-themer.css", "assets/slides-style.css"]
+  nature:
+    beforeInit: materials/macros.js
+    highlightLines: true
+    countIncrementalSlides: false
+    ratio: "16:9"

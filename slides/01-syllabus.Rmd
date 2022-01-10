@@ -1,0 +1,10 @@
+---
+title: "01 Introduction and Syllabus"
+author: 
+  - "STAT 550"
+  - "Daniel J. McDonald"
+date: 'Last modified - `r Sys.Date()`'
+---
+
+
+
