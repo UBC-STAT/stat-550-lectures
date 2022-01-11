@@ -20,8 +20,17 @@ date: 'Last modified - `r Sys.Date()`'
 -   Associate Professor, Department of Statistics 
 ]
 
+
+--
+
 .pull-right[
-![](https://dajmcdon.github.io/assets/img/GaribaldiHike.jpeg)
+* Moved to UBC in mid-March 2020, 2 days before the border closed
+* Previously a Stats Prof at Indiana University for 8 years
+
+
+.center[
+![:scale 50%](https://weareiu.com/wp-content/uploads/2018/12/map-1.png)
+]
 ]
 
 
