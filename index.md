@@ -1,6 +1,7 @@
 ---
 layout: page
 title: Lecture Slides
+icon: "fas fa-chalkboard-teacher"
 ---
 
 
