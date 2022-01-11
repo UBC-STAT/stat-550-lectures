@@ -4,9 +4,10 @@ author: "Daniel J. McDonald"
 author-url: https://dajmcdon.github.io/
 description: > # this means to ignore newlines until "baseurl:"
   UBC Stat 550 - Techniques of Statistical Consulting, 2021
-baseurl: "https://stat550-2021.github.io/" # the subpath of your site, e.g.
+baseurl: "lecture-slides" # the subpath of your site, e.g.
 url: "https://stat550-2021.github.io/"
 remote_theme: dajmcdon/minimal-course@bootstrap
+
 
 
 # Image and (square) dimension for logo (don't start with /)
