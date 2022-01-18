@@ -421,7 +421,7 @@ And here is another line that is cleanly resolved or unmodified.
 * Suppose we're concerned about a file named `README.md`
 * Often, `git status` will give some of these as suggestions
 
-1. Saved but staged
+1. Saved but not staged
 ```
 # grab the previously committed version
 git checkout -- README.md 
