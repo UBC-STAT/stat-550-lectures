@@ -17,7 +17,7 @@ class: center, middle, inverse, title-slide
 # 02 Git and Github
 ### STAT 550
 ### Daniel J. McDonald
-### Last modified - 2022-01-11
+### Last modified - 2022-01-18
 
 ---
 
@@ -389,7 +389,24 @@ git remote -v # list remotes
 git log # show recent commits, msgs
 ```
 
+
 ]
+
+---
+
+## Conflicts
+
+```
+Here are lines that are either unchanged from the common
+ancestor, or cleanly resolved because only one side changed.
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; yours:sample.txt
+Conflict resolution is hard;
+let's go shopping.
+=======
+Git makes conflict resolution easy.
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; theirs:sample.txt
+And here is another line that is cleanly resolved or unmodified.
+```
 
 ---
 
@@ -407,6 +424,11 @@ git log # show recent commits, msgs
     * These all appear to be "Undo"
     * But they are different
     * Documentation is a bit confusing
+    
+### Cheat sheet
+
+&lt;https://training.github.com/downloads/github-git-cheat-sheet.pdf&gt;
+
 
 ---
 
