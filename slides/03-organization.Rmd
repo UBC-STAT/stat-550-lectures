@@ -1,5 +1,5 @@
 ---
-title: "06 Project organization"
+title: "03 Project organization"
 author: 
   - "STAT 550"
   - "Daniel J. McDonald"
