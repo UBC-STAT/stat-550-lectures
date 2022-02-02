@@ -44,7 +44,11 @@ Calibrate your talk to the .secondary[Genre] and the .secondary[Audience]
 
 * A job talk takes much more work than a class presentation
 
-* General ideas are the same
+* For context, after much practice, it takes me about 1 hour per minute of presentation length, depending on the amount of polish.
+
+* My course lectures take about 4x the target duration.
+
+* General ideas are the same for all styles.
 
 ---
 
@@ -60,6 +64,8 @@ Calibrate your talk to the .secondary[Genre] and the .secondary[Audience]
 * Regardless of the audience, I think of dividing the talk roughly in 3rds.
 
 --
+
+<hr>
 
 1. Talk to your grandma. Why are you listening to me? Why is what I'm saying interesting?
 
@@ -93,6 +99,63 @@ But these parts are **recalibrated** to the audience.
 * Your employer might, but doesn't want to hear about $\sigma$-fields. 
 * Statisticians don't want to see proofs (but might want a sketch).
 * `...`
+
+---
+
+## Story structure
+
+> Once upon a time, a young MSc student went into the woods of theory and found some trees. After three months of wandering, they saw a house...
+
+--
+
+> Axe-weilding woodsman saves student from wolf attack.
+
+--
+
+<hr>
+
+1. (Enough details to give the headline.)
+
+1. Headline result.
+
+1. How do we know the result is real. What are the details of 
+computation, inference, methodology.
+
+1. Demonstration with empirics.
+
+--
+
+<hr>
+
+Attention span diminishes quickly. 
+
+What are the 3-5 takeaways?
+
+Hit your main result at the beginning: this is what I can do that I couldn't before.
+
+---
+
+## The map
+
+Map out what you've done.
+
+* What did you find?
+
+* What are the implications? Why does audience care?
+
+* How do we do it?
+
+--
+
+Avoid wandering in the wilderness:
+
+1. First we did this;
+1. But that didn't work, so we tried ...
+1. But then we added ...
+1. Finally we got to the beach ...
+1. And the water was nice ...
+
+You left your audience somewhere in the wilderness.
 
 ---
 class: middle, inverse, center
@@ -218,6 +281,8 @@ Defaults are almost always terrible.
 
 * With barchart, y-axis should start at 0.
 
+* `.png` vs `.svg`
+
 ---
 
 ## Graphics
@@ -309,6 +374,18 @@ background-size: contain
 
 * Use a graph
 
+--
+
+<hr>
+
+A graph with 3 dots should be a table of 3 numbers.
+
+But why do you have only 3 numbers?
+
+Any table can be a better graph.
+
+Is this the best way to display the data? Have I summarized too much?
+
 ---
 background-image: url("gfx/ridge-boxplots.png")
 background-position: center
@@ -330,3 +407,26 @@ background-size: contain
 `r pro` BE EXCITED. You worked hard on this. All results are cool. Play them up. You did something good and you want to tell everyone about how awesome you are. Own it. 
 
 `r pro` Take credit. Say "I showed this" not "It can be shown".
+
+---
+
+## Things that are debatable
+
+* Math talks tend to be "chalkboard"
+
+* CS talks tend to be "sales pitch"
+
+* Stats is in the middle.
+
+* I lean toward details with elements of salesmanship
+
+* If I hear your talk, I want to be able to "do" what you created. This is hard without some math. 
+
+* This also colours my decisions about software.
+
+
+
+
+--
+
+Jeff Bezos banned Powerpoint
