@@ -17,7 +17,7 @@ class: center, middle, inverse, title-slide
 # 05 Unit tests, errors, and assertions
 ### STAT 550
 ### Daniel J. McDonald
-### Last modified - 2022-02-09
+### Last modified - 2022-02-10
 
 ---
 
@@ -310,16 +310,142 @@ Test Driven Development (TDD) uses a short development cycle for each new featur
 
 1. **Make tests replicable.** If a test involves random data, what do you do when the test fails? You need some way to know what random values it used so you can figure out why the test fails.
 
-1. **Use tests instead of the REPL.** If you’re building a complicated function, write the tests in advance and use them to help you while you write the function. If you debug your code by calling the function on the REPL with various arguments, you’ll waste a lot of time compared to writing those calls into a test and running it every time you make changes.
+1. **Use tests instead of the REPL.** If you’re building a complicated function, write the tests in advance and use them to help you while you write the function. You'll waste time calling over and over at the REPL.
 
 1. **Avoid testing against another's code/package.** You don't know the ins and outs of what they do. If they change the code, your tests will fail.
 
 1. **Test Units, not main functions.** You should write small functions that do one thing. Test those. Don't write one huge 1000-line function and try to test that.
 
+1. **Avoid random numbers.** Seeds are not always portable.
+
 .emphasis[
 * `R`, use `{testthat}`. See the [Testing](http://r-pkgs.had.co.nz/tests.html) chapter from Hadley Wickham’s R Packages book.
 * `python` use `{pytest}`. A bit more user-friendly: [pytest](https://docs.pytest.org/en/latest/)
 ]
+
+---
+
+## Assertions
+
+**Assertions** are things that must be true. Failure means "Quit". 
+
+    - There's no way to recover. 
+    - Think: passed in bad arguments.
+    
+```
+def fit(data, ...):
+
+    for it in range(max_iterations):
+        # iterative fitting code here
+        ...
+
+        # Plausibility check
+        assert np.all(alpha &gt;= 0), "negative alpha"
+        assert np.all(theta &gt;= 0), "negative theta"
+        assert omega &gt; 0, "Nonpositive omega"
+        assert eta2 &gt; 0, "Nonpositive eta2"
+        assert sigma2 &gt; 0, "Nonpositive sigma2"
+
+    ...
+
+```
+
+The parameters have to be positive. Negative is impossible. No way to recover.
+
+---
+
+## Errors
+
+* Errors are for unexpected conditions that **could** be handled by the calling code.
+
+* You could perform some action to work around the error, fix it, or report it to the user.
+
+**Example:**
+
+- I give you directions to my house. You get lost. You could recover.
+- Maybe retrace your steps, see if you missed a sign post.
+- Maybe search on Google Maps to locate your self in relation to a landmark.
+- If those fail, message me.
+- If I don't respond, get an Uber.
+- Finally, give up and go home.
+
+--
+
+Code can also do this. It can `try` the function and `catch` errors to recover automatically.
+
+* Load some data of the internet. 
+* If the file doesn't exist, create some.
+* If we haven't converged, restart from another place.
+
+Code can fix errors without user input. It can't fix assertions.
+
+---
+
+## Best practices
+
+.pull-left[
+**Do this**
+
+
+```r
+foo &lt;- function(x) {
+  if (x &lt; 0) stop(x, " is not positive")
+  # would be easier with
+  # assert_that(x &gt;= 0)
+  # but that's beside the point
+}
+
+foo &lt;- function(x) {
+  if (x &lt; 0) message(x, " is not positive")
+}
+
+foo &lt;- function(x) {
+  if (x &lt; 0) warning(x, " is not positive")
+}
+
+foo &lt;- function(x) {
+  if (length(x) == 0)
+    rlang::abort("no data", class="no_input_data")
+}
+```
+
+These allow error handling.
+]
+
+--
+
+.pull-right[
+**Don't do this**
+
+```r
+foo &lt;- function(x) {
+  if (x &lt; 0) {
+    print(paste0(x, " is not positive"))
+    return(NULL)
+  }
+  ...
+}
+
+foo &lt;- function(x) {
+  if (x &lt; 0) {
+    cat("uh oh.")
+  }
+  ...
+}
+```
+
+Can't recover.
+
+Don't know what went wrong.
+
+]
+
+--
+
+See [here](https://36-750.github.io/practices/errors-exceptions/) for more details.
+
+Seems like overkill, but when you run a big simulation that takes 2 weeks, you don't want it to die after 10 days.   
+You want it to recover.
 
 ---
 
