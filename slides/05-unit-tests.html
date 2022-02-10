@@ -17,7 +17,7 @@ class: center, middle, inverse, title-slide
 # 05 Unit tests, errors, and assertions
 ### STAT 550
 ### Daniel J. McDonald
-### Last modified - 2022-02-07
+### Last modified - 2022-02-09
 
 ---
 
@@ -339,8 +339,9 @@ Test Driven Development (TDD) uses a short development cycle for each new featur
 **Goal:** find the MLE for `\(\lambda\)` using gradient ascent
 
 **Deliverables:**
-1. A function that computes the gradient of the log likelihood.
-1. A function that *does* the operation.
+1. A function that computes the log likelihood. (think about sufficiency)
+1. A function that computes the gradient of the log likelihood. 
+1. A function that *does* the operation. Should take in data, the log likelihood and the gradient. Use the loglikelihood to determine convergence. Pass in any other necessary parameters with reasonable defaults.
 1. A collection of tests that make sure your functions work.
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
