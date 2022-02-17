@@ -146,6 +146,12 @@ class: middle, inverse, center
 
 * "What was that interesting gene/feature/predictor?"
 
+ ---
+ 
+Really useful resource:
+* Emily Reiderer [RmdDD](https://emilyriederer.netlify.app/post/rmarkdown-driven-development/)
+* Talk [Slides](https://www.slideshare.net/EmilyRiederer/rmarkdown-driven-development-rstudioconf-2020)
+
 ---
 class: middle, center, inverse
 
