@@ -172,7 +172,7 @@ We have also modeled correlation within each classroom.
 $$y_{ij} = \x_{ij}^\top\vbeta + \epsilon_{ij},\quad \epsilon_{ij} \overset{iid}{\sim} \N(0,\sigma^2),$$
 where $\x_{ij}^\top = \mathbf{1}(\textrm{person i is in class j})$.
 
-* Won't change the estimated variance of $y_{ij}$.
+* ~Won't change the estimated variance of $y_{ij}$.~ Think about what $y_{ij}$ is.
 * But no model for the covariance within schools
 * Interpretation of the coefficients is different (could address with a contrast)
 
@@ -230,7 +230,7 @@ I'm a pragmatic frequentist.
 
 I've decided $\vgam_j$ is random, so why not just do the Bayesian thing now?
 
-* You don't get a p-value.
+* You don't get a p-value.... (turns out you don't from `{lme4}` either)
 
 ---
 ## Worked example
@@ -335,11 +335,13 @@ I think those plots are ugly. I'll fix the random one.
 
 .pull-left[
 ```{r, echo=TRUE}
+grabber <- function(x) x[1]
 p <- rs %>% 
-  mutate(sd = sd * qnorm(1 - (1-.95)/2),
-         ymin = median + sd,
-         ymax = median - sd,
-         pid = as.factor(groupID)) %>%
+  mutate(
+    sd = sd * qnorm(1 - (1-.95)/2),
+    ymin = median + sd,
+    ymax = median - sd,
+    pid = fct_reorder(as.factor(groupID), median, grabber)) %>%
   ggplot(aes(pid)) +
   geom_hline(yintercept = 0) +
   geom_linerange(aes(ymin=ymin, ymax=ymax)) +
