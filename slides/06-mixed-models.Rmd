@@ -1,0 +1,494 @@
+---
+title: "06 Mixed models and missingness"
+author: 
+  - "STAT 550"
+  - "Daniel J. McDonald"
+date: 'Last modified - `r Sys.Date()`'
+---
+
+```{r setup, include=FALSE}
+source("setup.R")
+```
+
+## Setting
+
+Most theoretical results are for iid data 
+
+All the `lm(...)` / `glm(...)` stuff you learned is for iid
+
+Another common name for this type of data is "cross-sectional"
+
+Lots of data is not this
+
+--
+
+<hr>
+
+1. **Longitudinal (panel) data:** measure $M$ units repeatedly at $T$ times
+
+2. **Clustered data:** measure $M$ units at each of $J$ locations
+
+3. **Time series:** measure 1 unit at $T$ times
+
+--
+
+These slides are **not** about time series.
+
+
+---
+
+## Examples
+
+
+.pull-left-narrow[
+
+1. Quiz scores
+
+2. HIV data
+
+3. TSR Shifts?
+
+4. Sugary beverages?
+]
+
+.pull-right-wide[
+```{r bc-covid, echo=FALSE, cache=TRUE}
+dat <- CanCovidData::get_british_columbia_case_data() %>%
+  rename(HA = `Health Authority`, Date = `Reported Date`,
+         Age = `Age group`) %>%
+  dplyr::filter(Date >= lubridate::ymd("2020-03-01")) %>%
+  rename(date = Date)
+cases <- dat %>%
+  count(date, HA, name = "Cases")
+```
+
+```{r bc-covdi-plot, echo=FALSE, fig.width=9}
+cases %>% 
+  dplyr::filter(HA != "Out of Canada", date > "2021-01-01") %>%
+  ggplot(aes(date, Cases, color = HA)) +
+  theme_bw(18) +
+  scale_color_brewer(palette = "Set1") +
+  geom_line() +
+  scale_y_log10(name = "Covid-19 cases (log scale)") +
+  scale_x_date(date_breaks = "3 months", expand = expansion(), name = "",
+               date_labels = "%b %Y") +
+  theme(legend.position = "bottom", legend.title = element_blank())
+```
+]
+
+---
+
+## Clustered or Longitudinal data
+
+* Just correlated within the unit
+
+> Within each unit, the observations are correlated.
+
+
+* Correlated over time
+
+> Within each location, past values are related to future values.
+
+
+* Random effects
+
+> Each unit / location needs it's own mean parameters.
+
+--
+
+ ---
+ 
+$$
+\newcommand{\x}{\mathbf{x}}
+\newcommand{\vy}{\mathbf{y}}
+\newcommand{\vbeta}{\boldsymbol{\beta}}
+\newcommand{\N}{\textrm{N}}
+\newcommand{\z}{\mathbf{z}}
+\newcommand{\vgam}{\boldsymbol{\gamma}}
+\newcommand{\veps}{\boldsymbol{\epsilon}}
+$$
+
+**Implications**: (i-th observation in the j-th unit)
+
+$$y_{ij} = \x_{ij}^\top \vbeta + \epsilon_{ij}, \quad \veps_j \overset{iid}{\sim} \N(0, \mathbf{D}_j)$$
+
+$$y_{ij} = \x_{ij}^\top \vbeta + \epsilon_{ij}, \quad \veps_j \overset{iid}{\sim} \N(0, \mathbf{D}_j),\quad \mathbf{D}_j \textrm{ structured}$$
+
+$$y_{ij} = \x_{ij}^\top \vbeta + \z_{ij}^\top \vgam_j  + \epsilon_{ij}, \quad \veps_j \overset{iid}{\sim} \N(0, \mathbf{D}_j),\quad \mathbf{D}_j \textrm{ structured,}\quad \vgam_j \overset{iid}{\sim}\N(0,\mathbf{R})$$
+
+---
+
+## Notes so far
+
+1. Lots of parameters 
+
+2. Impacts coefficient estimates, model specification
+
+3. Impacts inference (CIs on the coefficients)
+
+--
+
+ ---
+ 
+Need assumptions to make this work (usually)
+
+**Simple example:** (random effects model)
+
+* Observe $M$ students in $J$ classrooms. Each student takes a standardized test.
+
+* $y_{ij}$ is the score of the ith student in the jth classroom.
+
+* Typical (random effects) model is:
+$$y_{ij} = \beta_0 + \gamma_j + \epsilon_{ij},\quad \epsilon_{ij} \overset{iid}{\sim} \N(0,\sigma^2),\quad \gamma_j \overset{iid}{\sim} \N(0,\tau^2)$$
+
+--
+
+**Compare to:**
+
+$$y_{ij} = \beta_0 + \x_{ij}^\top\vbeta + \epsilon_{ij},\quad \epsilon_{ij} \overset{iid}{\sim} \N(0,\sigma^2)$$
+
+where $\x_{ij}$ is a 0-1 dummy vector indicating membership in class $j$
+
+---
+## Watch out
+
+$$y_{ij} = \beta_0 + \gamma_j + \epsilon_{ij},\quad \epsilon_{ij} \overset{iid}{\sim} \N(0,\sigma^2),\quad \gamma_j \overset{iid}{\sim} \N(0,\tau^2)$$
+
+On average, the $\gamma_j$'s are zero. But their estimates won't necessarily sum to 0 exactly.
+
+However, they are interpreted as deviations from $\beta_0$, the overall average score.
+
+$\textrm{Var}(y_{ij}) = \sigma^2 + \tau^2$ for all $i,j$.
+
+We have also modeled correlation within each classroom.
+
+--
+
+* $\textrm{Cov}(y_{ij},\ y_{i'j}) = \tau^2 >0$
+
+--
+
+**Compare to**
+$$y_{ij} = \x_{ij}^\top\vbeta + \epsilon_{ij},\quad \epsilon_{ij} \overset{iid}{\sim} \N(0,\sigma^2),$$
+where $\x_{ij}^\top = \mathbf{1}(\textrm{person i is in class j})$.
+
+* Won't change the estimated variance of $y_{ij}$.
+* But no model for the covariance within schools
+* Interpretation of the coefficients is different (could address with a contrast)
+
+---
+
+## Likelihood
+
+$$L(\beta_0,\ \vgam,\ \sigma^2,\ \tau^2 ;\ \mathbf{y}) = p(\mathbf{y}\ |\ \vgam)p(\vgam) = \prod_{i=1}^M\prod_{j=1}^J \frac{1}{\sigma\tau}\varphi\left(\frac{y_{ij}-(\beta_0 +\vgam_j)}{\sigma}\right)\varphi\left(\frac{\vgam_j}{\tau}\right).$$
+
+MLEs are easy to calculate for everything, here.
+
+Not easy in general.
+
+--
+
+$$\ell(\theta; \vy) \propto \frac{1}{2MJ}\lVert \vy -\beta_0 -  \mathbf{X}\vgam\rVert_2^2 + \frac{\sigma^2}{2\tau^2}\lVert \vgam \rVert_2^2$$
+
+Easy to get a point estimate with ridge regression (have to choose $\lambda = \sigma^2/\tau^2$)
+
+---
+
+## Bayesian version
+
+$$y_{ij} = \beta_0 + \gamma_j + \epsilon_{ij},\quad \epsilon_{ij} \overset{iid}{\sim} \N(0,\sigma^2),\quad \gamma_j \overset{iid}{\sim} \N(0,\tau^2)$$
+
+Need priors on $\beta_0$ (fixed effect?), $\sigma^2$, $\tau^2$.
+
+Can do uninformative, everything is nice and conjugate.
+
+Looks "like" the ridge version.
+
+---
+
+## Back to full generality
+
+$$y_{ij} = \x_{ij}^\top \vbeta + \z_{ij}^\top \vgam_j  + \epsilon_{ij}, \quad \epsilon_{ij} \overset{iid}{\sim} \N(0, \sigma^2),\quad \vgam_j \overset{iid}{\sim}\N(0,\mathbf{R})$$
+
+The $\vbeta$ is the "fixed" effect.
+
+The $\vgam$ is the "random" effect.
+
+Both together are a "mixed model".
+
+Easily estimated in `R` with `lme4::lmer(...)`.
+
+This will give you p-values with frequentist coverage.
+
+--
+ 
+ ---
+
+This is intellectually challenging for me.
+
+I'm a pragmatic frequentist. 
+
+I've decided $\vgam_j$ is random, so why not just do the Bayesian thing now?
+
+* You don't get a p-value.
+
+---
+## Worked example
+
+```{r, echo=TRUE}
+library(lme4)
+str(sleepstudy)
+```
+
+* On day 0 the subjects had their normal amount of sleep. 
+* Starting that night they were restricted to 3 hours of sleep per night. 
+* `Reaction`, represents average reaction times in milliseconds (ms) on a series of tests given each `Day` to each `Subject`
+
+```{r, fig.width = 12, fig.height=3}
+sleepstudy %>%
+  ggplot(aes(Days, Reaction, color = Subject)) +
+  facet_wrap(~Subject, labeller = label_both, nrow=2) +
+  theme_bw(16) +
+  scale_color_viridis_d() +
+  scale_x_continuous(breaks = c(0,3,6,9)) +
+  geom_point() +
+  geom_smooth(se=FALSE, method="lm") +
+  theme(legend.position = "none")
+```
+
+---
+
+## Two models
+
+Random intercept, fixed slope.
+
+```{r, echo = TRUE}
+f1 <- lmer(Reaction ~ (1 | Subject) + Days, sleepstudy)
+```
+
+Random intercept, random slope.
+
+```{r, echo = TRUE}
+f2 <- lmer(Reaction ~ Days + (Days | Subject), sleepstudy)
+```
+
+Comparisons
+
+```{r, echo = TRUE}
+anova(f1, f2)
+```
+
+---
+
+## Inference
+
+* `{lme4}` does not produce p-values [see the vignette](https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf)
+
+* `{lme4}` also does not produce CI's or p-values for the random effects.
+
+```{r, echo = TRUE}
+confint(f2)
+```
+
+```{r, echo = TRUE, eval = FALSE}
+ranef(f2) # display the point estimates for the random effects
+```
+
+I find this annoying. 
+
+The reasoning is something like "CI's are asymptotic, but the asymptotics don't really hold for any finite sample size, so these things aren't trustworthy"
+
+---
+
+## An alternative
+
+1. Be a Bayesian. .secondary[Many clients won't want this.]
+
+2. [`{merTools}`](https://cran.r-project.org/web/packages/merTools/vignettes/merToolsIntro.html).
+
+```{r, echo=TRUE, cache=TRUE}
+library(merTools)
+rs <- REsim(f2, n.sims = 200) # parametric bootstrap
+fs <- FEsim(f2, n.sims = 200)
+```
+
+.pull-left[
+```{r fe-plot, echo=TRUE, fig.height=3}
+merTools::plotFEsim(fs)
+```
+]
+
+.pull-right[
+```{r re-plot, echo=TRUE, fig.height=4}
+merTools::plotREsim(rs)
+```
+]
+
+---
+
+## Ugly
+
+I think those plots are ugly. I'll fix the random one.
+
+1. Look at the function. Type `View(plotREsim)` at the console
+2. Find the guts and see what I need to fix.
+
+.pull-left[
+```{r, echo=TRUE}
+p <- rs %>% 
+  mutate(sd = sd * qnorm(1 - (1-.95)/2),
+         ymin = median + sd,
+         ymax = median - sd,
+         pid = as.factor(groupID)) %>%
+  ggplot(aes(pid)) +
+  geom_hline(yintercept = 0) +
+  geom_linerange(aes(ymin=ymin, ymax=ymax)) +
+  geom_point(aes(y = median, color = pid), size = 3) +
+  facet_wrap(~term, ncol=1, scales = "free_y") +
+  theme_bw(18) +
+  scale_color_viridis_d() +
+  theme(legend.position = "none",
+        axis.text.x = element_text(size = 10)) +
+  ylab("Random effects")
+```
+]
+
+.pull-right[
+```{r re-plot-better, fig.height=5}
+p
+```
+]
+
+---
+class: middle, center, inverse
+
+
+# Missingness
+
+---
+
+## Typical (naïve) approach
+
+The .secondary[complete case] approach: use only the complete cases, ignore the rest.
+
+```{r, eval=FALSE, echo=TRUE}
+mean(z, na.rm = TRUE)
+lm(y~., data=dat, na.action = na.omit)
+```
+
+The issue isn't really .secondary[existence of missing cases].
+
+The issue is .tertiary[why] are the missing cases missing?
+
+--
+
+* Student skips homework because she got a headache. (Headaches are random, not correlated with homework skill)
+
+* Student skips homework because she read the first question and it was hard.
+
+---
+
+## Missing data mechanisms
+
+**Missing completely at random** (MCAR) -- the missingness depends neither on the missing values nor on the observed values
+
+
+**Missing at random** (MAR) -- the missingness does not depend on the missing values but may depend on observed values
+
+**Missing not at random** (MNAR) -- the missingness may depend on the missing values and the observed values (also called "non-ignorable missingness")
+
+--
+
+ ---
+
+1. Student had a headache and skipped the assignment.
+
+2. Student did poorly on homework 1 and skipped homework 2.
+
+3. Student thought homework looked hard, didn't do it.
+
+---
+## Naïve approaches
+
+**Complete case method:** Throw out the missing observations.
+
+* Works if MCAR, otherwise biased. 
+
+* Technically inefficient compared with the hypothetical that the data was complete.
+
+**Mean imputation:** impute missing data with average of observed
+
+**Last-value carried forward:** impute later missing values with the previous observed value
+
+* The second is common in longitudinal / time series.
+
+* Both result in incorrect confidence intervals.
+
+* You treat the "filled" data as real, so sample size is larger.
+
+* You ignore the uncertainty in the imputation
+
+---
+
+## Multiple imputation
+
+.emphasis[
+Impute values for each missing entry with the predicted values based on other observed data under an assumed imputation model.
+]
+
+Repeat the imputation multiple times.
+
+Example procedure (given a matrix of data):
+
+1. Treat column 1 as a response and the others as predictors.
+2. Initialize missing values in predictors to something.
+3. Fit a linear model of y on the rest. 
+4. Predict missing values in y given complete rest.
+5. Impute missing y with prediction + noise from prediction interval.
+
+Loop over columns.
+
+--
+
+ ---
+ 
+End up with multiple completed data sets. 
+
+Analyze each individually with the same model.
+
+Combine the results in a particular way.
+
+Correctly incorporates uncertainty from missingness into CIs for final model.
+
+
+---
+
+## Related options
+
+`{mice}` package does basically this. See the [documentation](https://amices.org/mice/)
+
+### Others
+
+**Be a Bayesian.**
+
+* Not much different from `{mice}`. 
+
+* Looks like "missing data are parameters. model them. do MCMC over all parameters"
+
+**EM algorithm.**
+
+* Integrates over the missingness.
+
+* Need to derive the algorithm specifically for your problem.
+
+* Sort of like infinitely many imputations.
+
+**Weighting.**
+
+* Estimating equations, observed data get larger weight.
+
+--
+
+ ---
+ 
+Censoring, dropouts, measurement error are not the same as missingness.
