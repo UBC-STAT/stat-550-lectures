@@ -11,3 +11,4 @@ icon: "fas fa-chalkboard-teacher"
 1. [Giving talks](slides/04-presentations.html)
 1. [Unit tests](slides/05-unit-tests.html)
 1. [Mixed models and missingness](slides/06-mixed-models.html)
+1. [ASDa presentation](slides/asda-slides.pdf)
