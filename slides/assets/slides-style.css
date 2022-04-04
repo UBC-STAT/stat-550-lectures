@@ -66,6 +66,9 @@ h1, h2, h3 {
 .small { font-size: 70% }
 .xsmall { font-size: 60% }
 .tiny { font-size: 50% }
+.small .remark-code { /*Change made here*/
+  font-size: 85% !important;
+}
 
 /* Custom fonts */
 
