@@ -1,0 +1,277 @@
+---
+title: "07 Cluster computing"
+author: 
+  - "STAT 550"
+  - "Daniel J. McDonald"
+date: 'Last modified - `r Sys.Date()`'
+---
+
+```{r setup, include=FALSE}
+source("setup.R")
+```
+
+## Reading for research
+
+* You should "read" regularly: set aside an hour every week
+* Stay up-to-date on recent research, determine what you find interesting
+* What do people care about? What does it take to write journal articles?
+
+---
+
+## What is "read"?
+
+* Start with titles, then abstracts, then intro+conclusion
+* Each is a filter to determine how far to go
+* Pass 3 filters, __read__ the paper (should take about ~30 minutes)
+* Don't get bogged down in notation, proofs
+* Organize your documents somehow, make notes in the margins, etc
+* After you __read__ it, you should be able to tell me what they show, why it's important, why it's novel
+* If you can, figure out _how_ they show something. This is hard.
+
+---
+
+## How to find and organize papers
+
+* arXiv, AOS, JASA, JCGS have RSS feeds, email lists etc
+* Find a statistician you like who filters
+* Follow reading groups
+* Conference proceedings
+* Become an IMS member, SSC member (ASA costs money:( )
+* BibDesk, Zotero
+* __NO__ Endnote
+
+---
+
+# Cluster computing (at UBC)
+
+
+---
+
+## UBC HPC
+
+### 3 potentially useful systems:
+
+1. Department VM
+2. [UBC ARC Sockeye](https://arc.ubc.ca/ubc-arc-sockeye)
+3. [Compute Canada](https://docs.computecanada.ca/wiki/Compute_Canada_Documentation)
+
+
+I've only used 1 and 3. I mainly use 3.
+
+### Accessing
+
+As far as I know, access for students requires "faculty" support
+
+1. Email The/Binh. 
+2. Possible you can access without a faculty PI.
+3. Email your advisor to ask for an account.
+
+---
+
+
+
+
+3. Login to a system
+    * Directly ` ssh dajmcdon@karst.uits.iu.edu`
+    * [Research Desktop](https://red.uits.iu.edu) or via ThinLinc Client -- this runs on Carbonate by default, but you can transfer
+    
+In the first case, upon login, you're on a "head" or "login" node. Jobs > 30min will be killed. You can continuously run short interactive jobs.
+
+In the second case, you're on a compute node (on Carbonate). You can run Rstudio, say, for as long as you want interactively.
+
+## Rule 1
+
+If you're doing work for school:
+
+Run it on RED. 
+
+Yes, there is overhead to push data over and pull results back.
+
+But Carbonate is much faster than your machine.
+
+And this won't lock up your laptop for 4 hours while you run the job.
+
+You can log out and leave the job running. Just log back in to see if it's done (you should _always_ have some idea how long it will take)
+
+You can check status of parallel jobs at [HPCEverywhere](https://hpceverywhere.iu.edu/#/) (currently in beta)
+
+## What do we mean by "parallel" (whirlwind)
+
+2 types:
+
+* "embarassingly parallel"
+* "not"
+
+
+Most of my work is "embarassing":
+
+1. Run the "same" thing under a bunch of configurations.
+2. When it's all done, collect the results and summarize with plots.
+
+"Not":
+
+1. One big thing that needs intermediate parallelization (e.g. Deep Learning).
+2. Something where the present step needs the value of the previous step (e.g. MCMC)
+
+# Basic computing on the IU cluster
+
+## Scheduling
+
+All IU systems (most HPC systems) use a __scheduler__.
+
+Unlike your machine, things don't just run. You submit a program and it executes based on the scheduler.
+
+IU uses Torque on Carbonate and Karst, Slurm on Big Red II.
+
+No scheduler if you're running something on RED, but you only get 1 processor.
+
+## Modules
+
+If you connect with `ssh`:
+
+There are no Applications loaded.
+
+You must tell the system what you want.
+
+The command is `module load R` or `module load sas`
+
+On RED, you can point and click
+
+You can create a file at `~/` called `.modules` 
+```
+touch .modules
+echo 'module load R' >> .modules
+```
+
+Now `R` is loaded at login.
+
+## Torque scripts
+
+Things you need:
+
+* Some code which does things (R, C++, python, etc.), say `ClusterPermute.R`
+* A Torque script which tells the scheduler how many resources you need and how to run your code:
+
+```
+#!/bin/bash  
+#PBS -l nodes=8:ppn=8,walltime=200:00:00
+#PBS -m abe
+#PBS -n ClusterPermute 
+#PBS -j oe 
+
+cd ~/SWModel/
+module list
+mpirun -np 64 -machinefile $PBS_NODEFILE R CMD BATCH ClusterPermute.R
+```
+
+* Then you ssh into Karst or Carbonate and type `qsub myTorqueScript` in the terminal
+* Wait until it is done.
+* If not embarassing, this is what you do.
+
+In the above case, `ClusterPermute.R` actually does parallelization using `Rmpi`.
+
+## More Torque
+
+I find Torque scripts to be a pain.
+
+It turns out that using R to parallelize is inefficient when there's a scheduler in the middle.
+
+More efficient is to write a program that writes and then submits multiple jobs using multiple Torque scripts.
+
+The version above will sit in the queue until there are 64 processors available.
+
+If instead I'd submitted 64 jobs, each asking for 1 processor, they would begin more quickly.
+
+On Karst, the nodes are "single user": only one user per node, so you get all it's processors.
+
+On Carbonate, this isn't true. The processors are single user.
+
+## Useful Torque commands
+
+```
+qsub myTorqueScript
+qsub -l walltime=10:00 myTorqueScript
+qsub -q debug my TorqueScript
+qstat -u dajmcdon
+qdel all
+```
+
+You can do these from HPCEverywhere.
+    
+## Simple parallelization
+
+- Most of my major computing needs are "embarassingly parallel"
+- I want to run a few algorithms on a bunch of different simulated datasets under different parameter configurations.
+- Perhaps run the algos on some real data too.
+- R has packages which are good for parallelization (`snow`, `snowfall`, `Rmpi`, etc.)
+- It also has a package for parallel experiments __which works on the cluster__ `batchtools`.
+
+## Intro to `batchtools`
+
+- Batchtools does a few things: 
+
+    1. It automates writing/submitting TORQUE scripts.
+    2. It automatically stores output, and makes it easy to collect.
+    3. It generates lots of jobs.
+    4. All this from `R` directly.
+    
+- In addition to red.uits.iu.edu, I find it useful to be able to ssh into Karst (or Carbonate)
+
+```
+ssh dajmcdon@karst.uits.iu.edu
+```
+- And you should download an sftp client (Cyberduck or Fetch are on IUware for Mac)
+
+## Setup `batchtools`
+
+1. Create a directory where all your jobs will live (in subdirectories). Mine is `~/Documents`
+2. In that directory, you need a template file. `myBatchJobs.tmpl`
+3. A configuration file which lives in your home directory. You must name it `.batchtools.conf.R`.
+
+## `myBatchJobs.tmpl`
+
+```
+#PBS -N <%= job.name %>
+## merge standard error and output
+#PBS -j oe
+#PBS -q condo
+#PBS -W group_list=stats
+## direct streams to our logfile
+#PBS -o <%= log.file %>
+#PBS -l walltime=<%= resources$walltime %>,nodes=<%= resources$nodes 
+  %>:ppn=<%= resources$ppn %>,vmem=<%= resources$memory %>
+
+
+## Export value of DEBUGME environemnt var to slave
+export DEBUGME=<%= Sys.getenv("DEBUGME") %>
+  
+## Run R:
+## we merge R output with stdout from PBS, which gets then logged via -o option
+module load r
+cd ~/Documents
+Rscript -e 'batchtools::doJobCollection("<%= uri %>")'
+```
+
+## `batchtools.conf.R`
+
+```{r bt-config, echo=TRUE, eval=FALSE}
+cluster.functions = makeClusterFunctionsTORQUE('~/Documents/myBatchJobs.tmpl')
+```
+
+
+
+# Using `batchtools`
+
+
+## Workflow
+
+__See the vignette__: `vignette("batchtools")`
+
+or the 
+
+[website](https://mllg.github.io/batchtools/articles/batchtools.html)
+
+1. Create a folder to hold your code. Mine usually contains 2 files, one to set up/run the experiment, one to collect results. Code needed to run the experiment lives in an `R` package.
+2. Write a script to setup the experiment and submit.
+3. Wait.
+4. Collect your results. Copy back to your machine etc.

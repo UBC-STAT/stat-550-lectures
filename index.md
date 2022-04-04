@@ -12,3 +12,5 @@ icon: "fas fa-chalkboard-teacher"
 1. [Unit tests](slides/05-unit-tests.html)
 1. [Mixed models and missingness](slides/06-mixed-models.html)
 1. [ASDa presentation](slides/asda-slides.pdf)
+1. [Jens's presentation](https://mountainmath.ca/stat_550)
+1. [Cluster computing](slides/07-cluster-computing.html)
