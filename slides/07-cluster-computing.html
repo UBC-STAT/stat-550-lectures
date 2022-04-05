@@ -17,7 +17,7 @@ class: center, middle, inverse, title-slide
 # 07 Cluster computing
 ### STAT 550
 ### Daniel J. McDonald
-### Last modified - 2022-04-04
+### Last modified - 2022-04-05
 
 ---
 
@@ -422,18 +422,19 @@ But the code doesn't **need** all those things to happen **at the same time** be
 
 1. Create a directory where all your jobs will live (in subdirectories). Mine is `~/`
 
-2. In that directory, you need a template file. Mine is `.batchtools.slurm.tmpl` (next slide)
+2. In that directory, you need a template file. Mine is `~/.batchtools.slurm.tmpl` (next slide)
 
-3. Create a configuration file which lives in your home directory. You must name it `.batchtools.conf.R`.
+3. Create a configuration file which lives in your home directory. You must name it `~/.batchtools.conf.R`.
 
 
 ```r
+# ~/.batchtools.conf.R
 cluster.functions = makeClusterFunctionsSlurm()
 ```
 
 ---
 
-## `.batchtools.slurm.tmpl`
+## `~/.batchtools.slurm.tmpl`
 
 .small[
 
@@ -486,6 +487,24 @@ When I'm ready to run, I'll call something like:
 ```r
 batchtools::submitJobs(job.ids, resources = list(ncpus=1, walltime="24:00:00", memory="32G"))
 ```
+
+---
+
+## Workflow
+
+__See the vignette__: `vignette("batchtools")`
+
+or the 
+
+[website](https://mllg.github.io/batchtools/articles/batchtools.html)
+
+1. Create a folder to hold your code. Mine usually contains 2 files, one to set up/run the experiment, one to collect results. Code needed to run the experiment lives in an `R` package.
+
+2. Write a script to setup the experiment and submit.
+
+3. Wait.
+
+4. Collect your results. Copy back to your machine etc.
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
