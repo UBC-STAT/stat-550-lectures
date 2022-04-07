@@ -56,7 +56,3 @@ algo_design <- list(glmnet_tuning = data.frame)
 addExperiments(prob_design, algo_design, repls = 25L)
 ids <- findJobs() # 3600 jobs, too many to submit at once
 ids[, chunk := chunk(job.id, n.chunks = 50)] # put into 50 chunks (randomly)
-
-
-
-
