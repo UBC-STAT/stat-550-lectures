@@ -17,7 +17,7 @@ class: center, middle, inverse, title-slide
 # 07 Cluster computing
 ### STAT 550
 ### Daniel J. McDonald
-### Last modified - 2022-04-05
+### Last modified - 2022-04-06
 
 ---
 
@@ -505,11 +505,218 @@ or the
 3. Wait.
 
 4. Collect your results. Copy back to your machine etc.
+
+
+---
+class: middle, inverse, center
+
+# Do it
+
+---
+
+## Example 1: Use genetics data to viral load
+
+* An "extra" example in a methods paper to appease reviewers
+
+* Method is: 
+    
+    1. apply a special version of PCA to a big (wide) data set
+    1. Do OLS using the top few PCs
+    
+* This is "principle components regression" with sparse principle components.
+
+* Got 413 COVID patients, measure "viral load" and gene expression
+
+* 9435 differentially expressed genes.
+
+* The method needs to form a 10K x 10K matrix multiple times and do an approximate SVD. Requires 32GB memory. Compute time is ~6 hours each time.
+
+* Two tuning parameters: sparsity and number of PCs
+
+* Want to do CV to choose, and then use those on the whole data, describe selected genes.
+
+---
+## Example 1: Use genetics data to viral load
+
+
+.small[
+
+```r
+library(batchtools)
+
+reg &lt;- makeExperimentRegistry("spcr-genes", packages = c("tidyverse", "suffpcr"))
+x &lt;- readRDS(here::here("suffpcr-covid", "covid_x.rds"))
+y &lt;- readRDS(here::here("suffpcr-covid", "covid_y.rds"))
+
+subsample = function(data, job, ratio, ...) {
+  n = nrow(data$x)
+  train = sample(n, floor(n * ratio))
+  test = setdiff(seq_len(n), train)
+  list(test = test, train = train)
+}
+
+addProblem("cv", data = list(x=x, y=y), fun = subsample)
+addProblem("full", data = list(x=x, y=y))
+
+addAlgorithm(
+  "spcr_cv", 
+  fun = function(job, data, instance,...) {
+    fit &lt;- suffpcr(data$x[instance$train,], data$y[instance$train], lambda_min = 0, lambda_max = 1, ...)
+    valid_err &lt;- colMeans((data$y[instance$test] - as.matrix(predict(fit, newdata = data$x[instance$test,])))^2, na.rm=TRUE)
+    return(list(fit = fit, valid_err=valid_err))
+  }
+)
+
+addAlgorithm(
+  "spcr_full",
+  fun = function(job, data, instance,...) suffpcr(data$x, data$y, lambda_max = 1, lambda_min = 0,...)
+)
+
+pdes_cv &lt;- list(cv = data.frame(ratio = .75))
+pdes_full &lt;- list(full = data.frame())
+ades_cv &lt;- list(spcr_cv = data.frame(d = c(3, 5, 15)))
+ades_full &lt;- list(spcr_full = data.frame(d = c(3, 5, 15)))
+addExperiments(pdes_cv, ades_cv, repls = 5L)
+addExperiments(pdes_full, ades_full)
+
+submitJobs(findJobs(), resources = list(ncpus=1, walltime="8:00:00", memory="32G"))
+```
+]
+
+End up with 18 jobs. 
+
+---
+## Example 2: Predicting future COVID cases
+
+* Take a few _very simple_ models and demonstrate that some choices make a big difference in accuracy.
+
+* At each time `\(t\)`, download COVID cases as observed on day `\(t\)` for a bunch of locations
+
+* Estimate a few different models for predicting days `\(t+1,...,t+k\)`
+
+* Store point and interval forecasts.
+
+* Do this for `\(t\)` every week over a year.
+
+---
+
+## Example 2: Predicting future COVID cases
+
+.small[
+
+```r
+fcasters &lt;- list.files(here::here("code", "forecasters"))
+for (fcaster in fcasters) source(here::here("code", "forecasters", fcaster))
+registry_path &lt;- here::here("data", "forecast-experiments")
+source(here::here("code", "common-pars.R"))
+
+# Setup the data ----------------------------------------------------
+reg &lt;- makeExperimentRegistry(
+  registry_path,
+  packages = c("tidyverse", "covidcast"),
+  source = c(here::here("code", "forecasters", fcasters), here::here("code", "common-pars.R"))
+)
+
+grab_data &lt;- function(data, job, forecast_date, ...) {
+  dat &lt;- covidcast_signals(data_sources, signals, as_of = forecast_date, geo_type = geo_type, start_day = "2020-04-15") %&gt;% aggregate_signals(format = "wide") 
+  names(dat)[3:5] &lt;- c("value", "num", "covariate") # assumes 2 signals
+  dat %&gt;% filter( !(geo_value %in% drop_geos) ) %&gt;% group_by(geo_value) %&gt;% arrange(time_value)
+}
+addProblem("covidcast_proper", fun = grab_data, cache = TRUE)
+
+# Algorithm wrappers -----------------------------------------------------
+baseline &lt;- function(data, job, instance, ...) instance %&gt;% dplyr::select(geo_value, value) %&gt;% group_modify(prob_baseline, ...)
+ar &lt;- function(data, job, instance, ...) instance %&gt;% dplyr::select(geo_value, time_value, value) %&gt;% group_modify(prob_ar, ...)
+qar &lt;- function(data, job, instance, ...) instance %&gt;% dplyr::select(geo_value, time_value, value) %&gt;% group_modify(quant_ar, ...)
+gam &lt;- function(data, job, instance, ...) instance %&gt;% dplyr::select(geo_value, time_value, value) %&gt;% group_modify(safe_prob_gam_ar, ...)
+ar_cov &lt;- function(data, job, instance, ...) instance %&gt;% group_modify(prob_ar_cov, ...)
+joint &lt;- function(data, job, instance, ...) instance %&gt;% dplyr::select(geo_value, time_value, value) %&gt;% joint_ar(...)
+corrected_ar &lt;- function(data, job, instance, ...) {
+  instance %&gt;% dplyr::select(geo_value, time_value, num) %&gt;% rename(value = num) %&gt;% corrections_single_signal(cparams) %&gt;% group_modify(prob_ar, ...)
+}
+
+addAlgorithm("baseline", baseline)
+addAlgorithm("ar", ar)
+addAlgorithm("qar", qar)
+addAlgorithm("gam", gam)
+addAlgorithm("ar_cov", ar_cov)
+addAlgorithm("joint_ar", joint)
+addAlgorithm("corrections", corrected_ar)
+```
+]
+
+`\(\ldots\)`
+
+---
+
+## Example 2: Predicting future COVID cases (cont.)
+
+
+```r
+# Experimental design -----------------------------------------------------
+problem_design &lt;- list(covidcast_proper = data.frame(forecast_date = forecast_dates))
+algorithm_design &lt;- list(
+  baseline = CJ(train_window = train_windows, min_train_window = min(train_windows), ahead = aheads),
+  ar = CJ(train_window = train_windows, min_train_window = min(train_windows), 
+          lags = lags_list, ahead = aheads),
+  qar = CJ(train_window = train_windows, min_train_window = min(train_windows),
+           lags = lags_list, ahead = aheads),
+  gam = CJ(train_window = train_windows, min_train_window = min(train_windows),
+           lags = lags_list, ahead = aheads, df = gam_df),
+  ar_cov = CJ(train_window = train_windows, min_train_window = min(train_windows), 
+              lags = lags_list, ahead = aheads),
+  joint_ar = CJ(train_window = joint_train_windows, min_train_window = min(joint_train_windows), 
+                lags = lags_list, ahead = aheads),
+  corrections = CJ(train_window = train_windows, min_train_window = min(train_windows),
+                   lags = lags_list, ahead = aheads)
+)
+
+addExperiments(problem_design, algorithm_design)
+ids &lt;- unwrap(getJobPars()) %&gt;% 
+  select(job.id, forecast_date) %&gt;% 
+  mutate(chunk = as.integer(as.factor(forecast_date))) %&gt;% 
+  select(-forecast_date)
+
+## ~13000 jobs, we don't want to submit that many since they run fast
+## Chunk them into groups by forecast_date (to download once for the group)
+## Results in 68 chunks
+
+submitJobs(ids, resources = list(ncpus=1, walltime="4:00:00", memory="16G"))
+```
+
+---
+
+## Your turn: Tuning parameters in lasso regression
+
+**Recall:**
+$$\min_\beta \frac{1}{2n}\lVert y- X\beta\rVert_2^2 + \lambda\lVert\beta\rVert_1 $$
+.pull-left[
+Settings:
+1. `\(\textrm{SNR} = \lVert X\beta^* \rVert_2^2 / \sigma^2  \in \{.1, 1, 10\}\)`
+2. Correlation of `\(X\)`: `\(\rho \in \{0, .2, .8\}\)`
+3. Data size: `\(n=100\)`, `\(p\in\{25, 50, 100, 1000\}\)`
+4. Sparsity level `\(s = |\beta^*| \in \{2, 10, 20\}\)`
+
+Methods:
+1. 10-fold CV, use `lambda.min`
+2. 10-fold CV, use `lambda.1se`
+3. AIC, minimize `\(\log(MSE) + 2\textrm{df}/n\)`
+4. BIC, minimize `\(\log(MSE) + 2\textrm{df}\times\log(n)/n\)`
+
+]
+
+.pull-right[
+Evaluation metrics:
+1. MSE on test data
+2. Precision (true positives / total non-zero `\(\hat\beta\)`)
+3. Recall (true positives / total positives)
+]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script src="assets/macros.js"></script>
 <script>var slideshow = remark.create({
+"highlightStyle": "github",
 "highlightLines": true,
 "countIncrementalSlides": false,
 "ratio": "16:9"

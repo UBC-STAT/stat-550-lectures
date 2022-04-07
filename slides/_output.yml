@@ -7,6 +7,7 @@ xaringan::moon_reader:
   css: ["assets/xaringan-themer.css", "assets/slides-style.css"]
   nature:
     beforeInit: assets/macros.js
+    highlightStyle: "github"
     highlightLines: true
     countIncrementalSlides: false
     ratio: "16:9"
