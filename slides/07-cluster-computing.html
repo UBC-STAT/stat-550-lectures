@@ -402,13 +402,13 @@ But the code doesn't **need** all those things to happen **at the same time** be
 
 * Better is to actually submit 64 different jobs each requiring 1 node
 
-* Then each can get out of the queue if there is a processor available.
+* Then each can get out of the queue whenever a processor becomes available.
 
-* But that would seem to require writing 64 different slurm scripts
+* But that would seem to require writing 64 different `slurm` scripts
 
 - `{batchtools}` does this for you, all in `R`
 
-    1. It automates writing/submitting TORQUE scripts.
+    1. It automates writing/submitting `slurm`/`torque` scripts.
     
     2. It automatically stores output, and makes it easy to collect.
     
@@ -416,6 +416,12 @@ But the code doesn't **need** all those things to happen **at the same time** be
     
     4. All this from `R` directly.
     
+--
+
+It's easy to port across machines/schedulers.
+
+I can test parts (or even run) it on my machine without making changes for the cluster.
+
 ---
 
 ## Setup `{batchtools}`
@@ -690,6 +696,7 @@ submitJobs(ids, resources = list(ncpus=1, walltime="4:00:00", memory="16G"))
 
 **Recall:**
 $$\min_\beta \frac{1}{2n}\lVert y- X\beta\rVert_2^2 + \lambda\lVert\beta\rVert_1 $$
+
 .pull-left[
 Settings:
 1. `\(\textrm{SNR} = \lVert X\beta^* \rVert_2^2 / \sigma^2  \in \{.1, 1, 10\}\)`

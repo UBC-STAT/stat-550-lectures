@@ -380,13 +380,13 @@ But the code doesn't **need** all those things to happen **at the same time** be
 
 * Better is to actually submit 64 different jobs each requiring 1 node
 
-* Then each can get out of the queue if there is a processor available.
+* Then each can get out of the queue whenever a processor becomes available.
 
-* But that would seem to require writing 64 different slurm scripts
+* But that would seem to require writing 64 different `slurm` scripts
 
 - `{batchtools}` does this for you, all in `R`
 
-    1. It automates writing/submitting TORQUE scripts.
+    1. It automates writing/submitting `slurm`/`torque` scripts.
     
     2. It automatically stores output, and makes it easy to collect.
     
@@ -394,6 +394,12 @@ But the code doesn't **need** all those things to happen **at the same time** be
     
     4. All this from `R` directly.
     
+--
+
+It's easy to port across machines/schedulers.
+
+I can test parts (or even run) it on my machine without making changes for the cluster.
+
 ---
 
 ## Setup `{batchtools}`
@@ -504,9 +510,9 @@ class: middle, inverse, center
 
 * 9435 differentially expressed genes.
 
-* The method needs to form a 10K x 10K matrix multiple times and do an approximate SVD. Requires 32GB memory. Compute time is ~6 hours each time.
+* The method needs to form a 10K x 10K matrix multiple times and do an approximate SVD. Requires 32GB memory. Compute time is ~6 hours.
 
-* Two tuning parameters: sparsity and number of PCs
+* Two tuning parameters: $\lambda$ and number of PCs
 
 * Want to do CV to choose, and then use those on the whole data, describe selected genes.
 
