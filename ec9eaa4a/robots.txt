@@ -1,1 +1,0 @@
-Sitemap: https://UBC-STAT.github.io/stat-550-lectures/sitemap.xml
