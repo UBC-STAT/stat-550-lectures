@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>03 Project organization</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="STAT 550" />
+    <meta name="author" content="Daniel J. McDonald" />
+    <script src="assets/libs/header-attrs/header-attrs.js"></script>
+    <script src="https://kit.fontawesome.com/ae71192e04.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="assets/xaringan-themer.css" type="text/css" />
+    <link rel="stylesheet" href="assets/slides-style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# 03 Project organization
+### STAT 550
+### Daniel J. McDonald
+### Last modified - 2022-02-17
+
+---
+
+class: middle, inverse, center
+
+
+
+### I urge you to consult:
+
+[.h2[ Karl Broman's Notes]](https://kbroman.org/Tools4RR/assets/lectures/06_org_eda_withnotes.pdf)
+
+---
+class: middle, inverse, center
+
+# Before I forget, .primary[BACK UP YOUR STUFF!!]
+
+---
+
+## Organizing your stuff
+
+.pull-left[
+```
+├── Advising
+│   ├── arash
+│   ├── gian-carlo
+├── CV
+├── Computing
+│   ├── FKF
+│   ├── batchtools.slurm.tmpl
+│   ├── computecanada_notes.md
+│   ├── ghclass
+│   └── spatio-temporal-exp-fam
+├── Grants
+│   ├── B&amp;E JSM 2010
+│   ├── CANSSI RRP 2020
+│   ├── NSERC 2020
+├── LettersofRec
+├── Manuscripts
+│   ├── Old
+├── Referee reports
+├── Talks
+│   ├── JobTalk2020
+│   ├── ubc-stat-covid-talk
+│   └── utoronto-grad-advice
+├── Teaching
+│   ├── stat-406
+│   ├── stat-550
+│   ├── zzzz CMU TA
+│   └── zzzz booth
+└── Website
+```
+]
+
+.pull-right[
+### Inside a project
+
+```
+.
+├── README.md
+├── Summary of Goals.rtf
+├── cluster_output
+├── code
+├── data
+├── dsges-github.Rproj
+├── manuscript
+└── waldman-triage
+```
+
+* Separate raw / processed data
+* Include a README
+* Ideally have a MAKEFILE
+* Under version control, shared with collaborator
+
+
+
+]
+
+
+
+---
+
+## Basic principles
+
+* Develop your own system
+
+* Put everything in a common directory
+
+* Be consistent
+    – directory structure; names
+
+* Separate raw from processed data
+* Separate code from data
+
+* It should be obvious what code created what files, and what the dependencies are.
+
+* .secondary[No hand-editing of data files]
+
+* .secondary[Don’t use spaces in file names]
+
+* Use relative paths, not absolute paths
+  - `../blah` not `~/blah` or `/users/dajmcdon/blah`
+  - The `{here}` package in `R` is great for this
+
+---
+
+## Problem: Coordinating with collaborators
+
+* Where to put data that multiple people will work with?
+
+* Where to put intermediate/processed data?
+
+* Where to indicate the code that created those processed data files?
+
+* How to divvy up tasks and know who did what?
+
+* Need to agree on directory structure and file naming conventions
+
+.center[.secondary[Github is (I think) the ideal solution, but not always feasible.]]
+
+--
+
+### Problem: Collaborators who don’t use Github
+* Use Github yourself
+* Copy files to/from some shared space
+    - Ideally, in an automated way (Dropbox, S3 Bucket)
+    - I avoid Word at all costs. Google Docs if needed.
+    - Word and Git do not mix
+    - .secondary[Last resort:] Word file in Dropbox. Everything else nicely organized on your end. Rmd file with similar structure to Manuscript that does the analysis.
+* Commit their changes.
+
+---
+
+## Using Rmarkdown for most things
+
+### Your goal is to .secondary[Avoid at all costs]:
+
+* "How did I create this plot?"
+
+* "Why did I decide to omit those six samples?"
+
+* "Where (on the web) did I find these data?"
+
+* "What was that interesting gene/feature/predictor?"
+
+ ---
+ 
+Really useful resource:
+* Emily Reiderer [RmdDD](https://emilyriederer.netlify.app/post/rmarkdown-driven-development/)
+* Talk [Slides](https://www.slideshare.net/EmilyRiederer/rmarkdown-driven-development-rstudioconf-2020)
+
+---
+class: middle, center, inverse
+
+# My workflow
+
+
+---
+
+## The basics
+
+1. I do all class documents in Rmarkdown. Notes, slides, etc. Organized in Github repos:
+```
+├── github-org
+│  ├── admm-cd
+│  ├── class-management
+│  ├── convexity-exercises
+...
+│  └── useful-materials
+├── instructor-private
+│  ├── README.md
+│  └── brief-summary
+└── student-public
+    ├── README.md
+    ├── docs
+    └── lecture-slides
+```
+
+2. When working out new code for a project, I use a combination of R package (as I get close to completion) and Rmarkdown.
+    - Many stat journals require reproducible, documented code. An R package is great for this.
+    - Rmarkdown alone lets me document as I go.
+    
+3. My students are required to give me reports in Rmarkdown (for practice).
+
+---
+
+## For professional presentations
+
+~~I use Rmarkdown + Beamer:~~ Now I use Rmd + Xaringan (see [`dajmcdon/talk-template`](https://github.com/dajmcdon/talk-template))
+
+```
+---
+title: "Trend filtering in exponential families"
+author: |
+  | Daniel J. McDonald
+  | University of British Columbia
+  | \alert{\footnotesize \url{dajmcdon.github.io}}
+date: |  
+  | 4 March 2020
+output: 
+  beamer_presentation:
+    latex_engine: pdflatex
+    includes:
+      in_header: macros.tex
+classoption: "aspectratio=169"
+---
+```
+
+The `includes` statement loads all the LaTeX macros I need, specifies Beamer choices.
+
+---
+
+
+## The old presentation
+
+1. Write lots of LaTeX, R code in separate files
+2. Need a figure. Run R code, get figure, save as pdf.
+3. Recompile LaTeX. Axes are unreadable. Back to R, rerun R code,...
+4. Recompile LaTeX. Can't distinguish lines. Back to R, rerun R code,...
+5. Etc, etc.
+
+Now:  
+Code and LaTeX live in one file. I just recompile.
+
+---
+
+
+## The old manuscript
+
+Similar to the old presentation.
+
+Now:  
+1. R package with documented code, available on Github.  
+2. One script to run the analysis, one to gather the results.  
+3. One Rmd file to take in the results, do preprocessing, generate all figures.  
+4. LaTeX file on Journal style.
+
+## The optimal
+
+Same as above but with a Makefile to automatically run 1-4.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="assets/macros.js"></script>
+<script>var slideshow = remark.create({
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

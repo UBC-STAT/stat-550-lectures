@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>02 Git and Github</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="STAT 550" />
+    <meta name="author" content="Daniel J. McDonald" />
+    <script src="assets/libs/header-attrs/header-attrs.js"></script>
+    <script src="https://kit.fontawesome.com/ae71192e04.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="assets/xaringan-themer.css" type="text/css" />
+    <link rel="stylesheet" href="assets/slides-style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# 02 Git and Github
+### STAT 550
+### Daniel J. McDonald
+### Last modified - 2022-01-18
+
+---
+
+
+
+## Why version control?
+
+.center[
+
+![:scale 30%](http://www.phdcomics.com/comics/archive/phd101212s.gif)
+
+]
+
+* Much of this lecture is borrowed/stolen from Colin Rundel and Karl Broman
+
+---
+
+## Why version control?
+
+* Simple formal system for tracking all changes to a project
+
+* Time machine for your projects
+    + Track blame and/or praise
+    + Remove the fear of breaking things
+
+* Learning curve is steep, but when you need it you REALLY need it
+
+&gt; Your closest collaborator is you six months ago, but you don’t reply to emails.
+&gt; -- _Paul Wilson_
+
+---
+
+## Why Git
+
+* You could use something like Box or Dropbox
+
+* These are poor-man's version control
+
+* Git is much more appropriate
+
+* It works with large groups
+
+* It's very fast
+
+* It's much better at fixing mistakes
+
+* Tech companies use it (so it's in your interest to have some experience)
+
+.emphasis[This will hurt, but what doesn't kill you, makes you stronger.]
+
+---
+
+## Overview
+
+* `git` is a command line program that lives on your machine
+
+* If you want to track changes in a directory, you type `git init`
+
+* This creates a (hidden) directory called `.git`
+
+* The `.git` directory contains a history of all changes made to "versioned" files
+
+* This top directory is referred to as a "repository" or "repo"
+
+* `github.com` is a service that hosts a repo  remotely and has other features: issues, project boards, pull requests, renders `.ipynb` &amp; `.md`
+
+* Some IDEs (pycharm, RStudio, VScode) have built in `git` (I don’t use this) 
+
+* `git`/`github.com` is broad and complicated. Here, just what you **need**
+
+---
+
+## Typical workflow
+
+
+.pull-left[
+1. Download a repo from Github
+```
+git clone https://github.com/stat550-2021/lecture-slides.git
+```
+2. Create a **branch**
+```
+git branch &lt;branchname&gt;
+```
+3. Make changes to your files.
+4. Add your changes to be tracked ("stage" them)
+```
+git add &lt;name/of/tracked/file&gt;
+```
+5. Commit your changes
+```
+git commit -m "Some explanatory message"
+```
+
+
+**Repeat 3--5 as needed. Once you're satisfied**
+
+* Push to Github
+```
+git push
+git push -u origin &lt;branchname&gt;
+```
+]
+
+.pull-right[.center[
+![:scale 70%](gfx/git-clone.png)
+]]
+
+
+---
+## What should be tracked?
+
+**Definitely** code, markdown documentation, tex files, bash scripts/makefiles, ...
+
+**Possibly** logs, jupyter notebooks, images (that won’t change), ...
+
+**Questionable** processed data, static pdfs, ...
+
+**Definitely not** full data, continually updated pdfs (other things compiled from source code), ...
+
+---
+
+## What things to track
+
+
+
+* You decide what is "versioned". 
+
+* A file called `.gitignore` tells `git` files or types to never track
+
+```
+# History files
+.Rhistory
+.Rapp.history
+
+# Session Data files
+.RData
+
+# User-specific files
+.Ruserdata
+```
+
+* Shortcut to track everything (use carefully):
+
+```
+git add .
+```
+
+
+
+
+---
+
+## Rules
+
+**In-class work**
+* Everyone shares a repo
+* Each group/person makes a branch (with a creative name)
+* Rename files that you clone.
+* You push your changes and make a PR against `main`
+* I review your work and merge the PR (I may ask for changes)
+
+**Case Studies**
+* Each team has its own repo
+* [...] I'll come back to this
+* You must make at **least 5 commits**
+* Make a PR against `main` to submit
+* I review your work and merge the PR (I may ask for changes)
+
+
+---
+
+## What's a PR?
+
+* This exists on Github (not git)
+
+* Demonstration
+
+--
+
+.pull-left[.center[
+![:scale 100%](gfx/pr1.png)
+]]
+
+.pull-right[.center[
+![:scale 80%](gfx/pr2.png)
+]]
+
+---
+
+## Practice
+
+.pull-left[
+
+[Website](https://ubc-stat.github.io/stat-535-convexopt/)
+
+Do you have `git`?
+```
+git --version
+```
+If it's there, you're done.
+
+Help on `git/github`:
+
+https://happygitwithr.com/install-git.html
+
+]
+
+.pull-right[.center[
+![:scale 60%](https://imgs.xkcd.com/comics/git.png)
+]]
+
+
+---
+class: middle, inverse, center
+
+## Useful formulae
+
+
+---
+
+## The `main/develop/branch` workflow
+
+* When working on your own  
+    1. Don't NEED branches.
+    1. I often make a branch if I want to try a modification without breaking what I have.
+    1. Otherwise, can "pretend `git` is Dropbox": work on `main`, make changes and commits, sync to remote for backup purposes.
+    
+--
+    
+* When working on a large team with production grade software
+    1. `main` is protected, released version of software (maybe renamed to `release`)
+    1. `develop` contains things not yet on `main`, but thoroughly tested
+    1. On a schedule (once a week, once a month) `develop` gets merged to `main`
+    1. You work on a `feature` branch off `develop` to build your new feature
+    1. You do a PR against `develop` 
+    
+--
+
+### Protection
+
+* Typical for your PR to trigger tests to make sure you don't break things
+* Typical for team members or supervisors to review your PR for compliance
+
+.emphasis[Suggest you adopt the "production" version for your Team Assignments]
+
+
+---
+
+## Guardrails
+
+* The `.github` directory contains interactions with Github
+
+    1. Actions: On push/PR/other Github does something on their server (ex builds a website)
+    1. PR templates: Little admonitions when you open a PR
+    1. Branch protection: prevent you from doing stuff
+    
+* In this course (some Repos), I protect `main` so that you can't push there
+
+.emphasis[
+If you try to push to `main`, it will give an error like
+```
+remote: error: GH006: Protected branch update failed for refs/heads/main.
+```
+]
+
+* I also use a PR template. It gives you some instructions that you should follow
+
+--
+
+.alert[Read the PR template!!]
+
+
+---
+
+## Operations in Rstudio 
+
+1. Stage
+1. Commit
+1. Push
+1. Pull
+1. Create a branch
+
+--
+
+.emphasis[
+Covers:
+* Everything "on your own"
+* Plus most other things you "want to do"
+]
+
+--
+
+#### Command line versions
+
+```
+git add &lt;name/of/file&gt;
+git commit -m "some useful message"
+git push
+git pull
+git checkout -b &lt;name/of/branch&gt;
+
+```
+
+---
+
+## Other useful, command line only
+
+.pull-left[
+.primary[Initializing]
+```
+git config user.name --global "Daniel J. McDonald"
+git config user.email --global "daniel@stat.ubc.ca"
+git config core.editor --global nano 
+# or emacs or ... (default is vim)
+```
+
+
+.primary[Staging]
+```
+git add . # stage all
+```
+
+.primary[Committing]
+```
+# stage/commit simultaneously
+git commit -am "message" 
+
+# open editor to write long commit message
+git commit 
+```
+
+.primary[Pushing]
+```
+# If &lt;branchname&gt; doesn't exist
+# on remote, create it and push
+git push -u origin &lt;branchname&gt;
+```
+]
+
+.pull-right[
+.primary[Branching]
+```
+# switch to &lt;branchname&gt;, error if uncommitted changes
+git checkout &lt;branchname&gt; 
+# switch to a previous commit
+git checkout aec356
+
+# create a new branch
+git branch &lt;branchname&gt;
+
+# create a new branch and check it out
+git checkout -b &lt;branchname&gt;
+
+# merge &lt;branch2&gt; onto &lt;branch1&gt;
+git checkout &lt;branch1&gt;
+git merge &lt;branch2&gt;
+
+# grab a file from another branch
+git checkout &lt;branch2&gt; -- name/of/file
+
+git branch -v # list all branches
+```
+
+.primary[Check the status]
+```
+git status
+git remote -v # list remotes
+git log # show recent commits, msgs
+```
+
+
+]
+
+---
+
+## Conflicts
+
+```
+Here are lines that are either unchanged from the common
+ancestor, or cleanly resolved because only one side changed.
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; yours:sample.txt
+Conflict resolution is hard;
+let's go shopping.
+=======
+Git makes conflict resolution easy.
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; theirs:sample.txt
+And here is another line that is cleanly resolved or unmodified.
+```
+
+---
+
+## Some final pointers
+
+* Commits have long names: `32b252c854c45d2f8dfda1076078eae8d5d7c81f`
+
+* If you want to use it, you need "enough to be unique": `32b25`
+
+* Online help uses directed graphs:
+    * In stats, arrows point from cause to effect, forward in time
+    * In git docs, it's reversed, they point to the thing on which they depend
+    
+* Reset/Revert/Rebase
+    * These all appear to be "Undo"
+    * But they are different
+    * Documentation is a bit confusing
+    
+### Cheat sheet
+
+&lt;https://training.github.com/downloads/github-git-cheat-sheet.pdf&gt;
+
+
+---
+
+## How to undo
+
+* Suppose we're concerned about a file named `README.md`
+* Often, `git status` will give some of these as suggestions
+
+1. Saved but not staged
+```
+# grab the previously committed version
+git checkout -- README.md 
+```
+
+2. Staged but not committed
+```
+# unstage
+git reset HEAD README.md
+git checkout -- README.md
+```
+
+3. Committed
+```
+# grab the version from another commit
+git checkout 32b252 -- README.md
+# grab the version from another branch
+git checkout otherbranch -- README.md
+```
+
+---
+
+## Recovering from things
+
+1. Did work on main, got refused a Push
+```
+# make a new branch with everything, but stay on main
+git branch newbranch
+# find out where to go to
+git log
+# undo everything after ace2193
+git reset --hard ace2193
+git checkout newbranch
+```
+
+2. Made a branch, did lots of work, realized it all s**ks
+```
+git checkout main
+git branch -d badbranch
+```
+
+3. Anything more complicated, either post to Slack or LMGTFY
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="assets/macros.js"></script>
+<script>var slideshow = remark.create({
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

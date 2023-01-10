@@ -1,0 +1,9 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Lecture slides",
+    "section": "",
+    "text": "Important\n\n\n\nLecture slides have not been updated since last year.\n\n\n\nSyllabus and introduction\nGit and Github\nOrganization\nGiving talks\nUnit tests\nModel selection\nTesting non-nested models, contrasts, dummy variables, interpreting coefficients in non-Gaussian regression.\nRegularization and modern methods\nReading statistical papers\nASDa presentation \nCluster computing"
+  }
+]
