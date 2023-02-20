@@ -1,0 +1,8 @@
+editor: source
+author: "<br>STAT 550 <br><br> Daniel J. McDonald<br>"
+date: today
+format:
+  revealjs:
+    theme: [default, themer.scss]
+    width: 1600
+    height: 900

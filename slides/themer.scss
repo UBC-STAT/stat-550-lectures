@@ -1,0 +1,17 @@
+/*-- scss:defaults --*/
+
+// import google fonts
+
+@import url("https://fonts.googleapis.com/css2?family=EB+Garamond");
+@import url("https://fonts.googleapis.com/css2?family=Commissioner");
+
+
+$primary: #2c365e;
+$secondary: #e98a15;
+$tertiary: #0a8754;
+$fourth-color: #a8201a;
+$font-family-sans-serif:  "Commissioner", "Source Sans Pro", Helvetica, sans-serif, !default;
+$presentation-font-size-root: 40px;
+$body-bg: #fefefe;
+$presentation-heading-color: $primary;
+$link-color: $secondary;
