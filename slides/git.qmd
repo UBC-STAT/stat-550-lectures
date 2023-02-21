@@ -20,7 +20,7 @@ format: revealjs
     + Remove the fear of breaking things
 * Learning curve is steep, but when you need it you REALLY need it
 
-::: {.callout-caution icon=false}
+::: {.callout-tip icon=false}
 ## Words of wisdom
 
 Your closest collaborator is you six months ago, but you don’t reply to emails.
@@ -113,7 +113,7 @@ git push -u origin <branchname>
 
 ---
 
-![](slides/gfx/git-clone.png){fig-align="center"}
+![](gfx/git-clone.png){fig-align="center"}
 
 
 ## What should be tracked?
@@ -185,9 +185,9 @@ Project submissions are done similarly.
 
 
 ::: {.r-stack}
-![](slides/gfx/pr1.png){.fragment height="50%"}
+![](gfx/pr1.png){.fragment height="50%"}
 
-![](slides/gfx/pr2.png){.fragment height="50%"}
+![](gfx/pr2.png){.fragment height="50%"}
 :::
 
 ## Some things to be aware of
@@ -365,13 +365,14 @@ git log # show recent commits, msgs
 * Meaning that changes on one branch would overwrite changes on a different branch.
 
 :::: {.columns}
-::: {.column width="60%"}
+::: {.column width="50%"}
 
 * They look like this:
 
 ```
-Here are lines that are either unchanged from the common
-ancestor, or cleanly resolved because only one side changed.
+Here are lines that are either unchanged from
+the common ancestor, or cleanly resolved 
+because only one side changed.
 
 But below we have some troubles
 <<<<<<< yours:sample.txt
@@ -381,11 +382,13 @@ let's go shopping.
 Git makes conflict resolution easy.
 >>>>>>> theirs:sample.txt
 
-And here is another line that is cleanly resolved or unmodified.
+And here is another line that is cleanly 
+resolved or unmodified.
 ```
 
 :::
-::: {.column width="40%"}
+
+::: {.column width="50%"}
 
 You get to decide, do you want to keep
 

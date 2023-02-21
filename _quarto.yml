@@ -34,4 +34,8 @@ format:
     theme: [cosmo, assets/styles.scss]
     css: styles.css
     toc: true
+  revealjs:
+    theme: [default, slides/themer.scss]
+    width: 1600
+    height: 900
 
