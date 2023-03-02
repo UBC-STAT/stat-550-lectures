@@ -7,10 +7,10 @@ title: Lecture slides
 Lecture slides have not been updated since last year.
 :::
 
-1. [Syllabus and introduction](slides/syllabus.qmd)
-1. [Git and Github](slides/git.qmd)
-1. [Organization](slides/organization.qmd)
-1. [Giving talks](slides/presentations.qmd)
+1. [Syllabus and introduction](slides/01-syllabus.html)
+1. [Git and Github](slides/02-git.html)
+1. [Organization](slides/03-organization.html)
+1. [Giving talks](slides/04-presentations.html)
 1. [Unit tests](slides/05-unit-tests.html)
 1. Model selection
 1. Testing non-nested models, contrasts, dummy variables, interpreting coefficients in non-Gaussian regression.
