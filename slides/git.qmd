@@ -5,6 +5,11 @@ format: revealjs
 
 ## Why version control?
 
+```{r setup, include=FALSE}
+source("qmd-config.R")
+```
+
+
 
 ![](http://www.phdcomics.com/comics/archive/phd101212s.gif){fig-align="center" height="60%"}
 
@@ -18,7 +23,7 @@ format: revealjs
 * Time machine for your projects
     + Track blame and/or praise
     + Remove the fear of breaking things
-* Learning curve is steep, but when you need it you REALLY need it
+* Learning curve is steep, but when you need it you [REALLY]{.secondary} need it
 
 ::: {.callout-tip icon=false}
 ## Words of wisdom
@@ -62,7 +67,7 @@ This will hurt, but what doesn't kill you, makes you stronger.
 * This top directory is referred to as a "repository" or "repo"
 * <http://github.com> is a service that hosts a repo  remotely and has other features: issues, project boards, pull requests, renders `.ipynb` & `.md`
 * Some IDEs (pycharm, RStudio, VScode) have built in `git`
-* `git`/GitHub is broad and complicated. Here, just what you **need**
+* `git`/GitHub is broad and complicated. Here, just what you [need]{.secondary}
 
 ## Aside on "Built-in" & "Command line"
 
@@ -172,7 +177,7 @@ git add .
 * Each team has their own repo
 * Make a PR against `main` to submit
 * Peer evaluations are done via PR review (also send to Estella)
-* You must make at **least 5 commits**
+* YOU must make at [least 5 commits]{.secondary} (fewer will lead to deductions)
 * I review your work and merge the PR
 
 Project submissions are done similarly.
@@ -180,7 +185,6 @@ Project submissions are done similarly.
 ## What's a PR?
 
 * This exists on Github (not git)
-
 * Demonstration
 
 
@@ -195,7 +199,7 @@ Project submissions are done similarly.
 * `master` vs `main`
 * If you think you did something wrong, stop and ask for help
 * There are guardrails in place. But those won't stop a bulldozer.
-* The hardest part is the initial setup. Then, this should all be rinse and repeat.
+* The hardest part is the initial setup. Then, this should all be rinse-and-repeat.
 * This book is great: [Happy Git with R](https://happygitwithr.com)
     1. See Chapter 6 if you have install problems.
     1. See Chapter 10 for credential caching (avoid typing a password all the time)
@@ -204,7 +208,7 @@ Project submissions are done similarly.
 ## The `main/develop/branch` workflow
 
 * When working on your own
-    1. Don't NEED branches (but you should use them)
+    1. Don't NEED branches (but you should use them, really)
     1. I make a branch if I want to try a modification without breaking what I have.
     
     
@@ -231,9 +235,9 @@ I suggest you adopt the "production" version for your Team Assignments
 
 ## Guardrails
 
-* The `.github` directory contains interactions with Github
+* The `.github` directory contains interactions with GitHub
 
-    1. Actions: On push / PR / other Github does something on their server (builds a website, runs tests on code)
+    1. Actions: On push / PR / other GitHub does something on their server (builds a website, runs tests on code)
     1. PR templates: Little admonitions when you open a PR
     1. Branch protection: prevent you from doing stuff
     
@@ -244,6 +248,8 @@ If you try to push to `main`, it will give an error like
 ```{{bash}}
 remote: error: GH006: Protected branch update failed for refs/heads/main.
 ```
+
+The fix is: make a new branch, then push that.
 :::
 
 ---
@@ -269,7 +275,7 @@ Read the PR template!!
 
 ::: {.callout-note}
 ## Covers:
-* Everything to do your HW if you're careful
+* Everything to do your HW / Project if you're careful
 * Plus most other things you "want to do"
 :::
 :::
@@ -281,9 +287,13 @@ Read the PR template!!
 
 ```{{bash}}
 git add <name/of/file>
+
 git commit -m "some useful message"
+
 git push
+
 git pull
+
 git checkout -b <name/of/branch>
 ```
 
@@ -399,14 +409,15 @@ You get to decide, do you want to keep
 
 But always delete the `<<<<<`, `======`, and `>>>>>` lines.
 
+Once you're satisfied, committing resolves the conflict.
+
 :::
 ::::
 
 ## Some other pointers
 
 * Commits have long names: `32b252c854c45d2f8dfda1076078eae8d5d7c81f`
-
-* If you want to use it, you need "enough to be unique": `32b25`
+    * If you want to use it, you need "enough to be unique": `32b25`
 
 * Online help uses directed graphs in ways different from statistics:
     * In stats, arrows point from cause to effect, forward in time
@@ -425,7 +436,7 @@ But always delete the `<<<<<`, `======`, and `>>>>>` lines.
 
 :::: {.columns}
 ::: {.column width="50%"}
-**1.** Saved but not staged
+### 1. Saved but not staged
 
 * In RStudio, select the file and click `r fontawesome::fa("gear", fill="blue")` `r fontawesome::fa("caret-down")` then select `r fontawesome::fa("arrow-rotate-left", fill="red")` Revert...
 ```{{bash}}
@@ -433,7 +444,7 @@ But always delete the `<<<<<`, `======`, and `>>>>>` lines.
 git checkout -- README.md 
 ```
 
-**2.** Staged but not committed
+### 2. Staged but not committed
 
 * In RStudio, uncheck the box by the file, then use the method above.
 ```{{bash}}
@@ -445,7 +456,7 @@ git checkout -- README.md
 
 ::: {.column width="50%"}
 
-**3.** Committed
+### 3. Committed
 
 * Not easy to do in RStudio...
 ```{{bash}}
@@ -479,7 +490,7 @@ git reset --hard ace2193
 git checkout newbranch
 ```
 
-2. Made a branch, did lots of work, realized it all s**ks
+2. Made a branch, did lots of work, realized it's trash, and you want to burn it
 ```{{bash}}
 git checkout main
 git branch -d badbranch
