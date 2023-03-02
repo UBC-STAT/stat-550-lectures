@@ -1,7 +1,6 @@
 project:
   type: website
-  resources:
-    - "slides/"
+  output-dir: "_site"
   render:
     - "*.qmd"
     - "!slides/*.Rmd"
