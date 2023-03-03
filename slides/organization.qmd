@@ -1,0 +1,219 @@
+---
+title: "Organization"
+format: revealjs
+---
+
+## I urge you to consult:
+
+[Karl Broman's Notes](https://kbroman.org/Tools4RR/assets/lectures/06_org_eda_withnotes.pdf)
+
+```{r setup, include=FALSE}
+source("qmd-config.R")
+```
+
+# Before I forget, BACK UP YOUR STUFF!!
+
+## Organizing your stuff
+
+::::{.columns}
+:::{.column width="50%"}
+
+```
+├── Advising
+│   ├── arash
+│   ├── gian-carlo
+├── CV
+├── Computing
+│   ├── FKF
+│   ├── batchtools.slurm.tmpl
+│   ├── computecanada_notes.md
+│   ├── ghclass
+│   └── spatio-temporal-exp-fam
+├── Grants
+│   ├── B&E JSM 2010
+│   ├── CANSSI RRP 2020
+│   ├── NSERC 2020
+├── LettersofRec
+├── Manuscripts
+│   ├── Old
+├── Referee reports
+├── Talks
+│   ├── JobTalk2020
+│   ├── ubc-stat-covid-talk
+│   └── utoronto-grad-advice
+├── Teaching
+│   ├── stat-406
+│   ├── stat-550
+│   ├── zzzz CMU TA
+│   └── zzzz booth
+└── Website
+```
+:::
+
+:::{.column width="50%"}
+
+### Inside a project
+
+```
+.
+├── README.md
+├── Summary of Goals.rtf
+├── cluster_output
+├── code
+├── data
+├── dsges-github.Rproj
+├── manuscript
+└── waldman-triage
+```
+:::
+::::
+
+* Separate raw / processed data
+* Include a README
+* Ideally have a MAKEFILE
+* Under version control, shared with collaborator
+
+
+## Basic principles
+
+* Develop your own system
+* Put everything in a common directory
+* Be consistent
+    – directory structure; names
+* Separate raw from processed data
+* Separate code from data
+* It should be obvious what code created what files, and what the dependencies are.
+* [No hand-editing of data files]{.secondary}
+* [Don’t use spaces in file names]{.secondary}
+* Use relative paths, not absolute paths
+  - `../blah` not `~/blah` or `/users/dajmcdon/blah`
+  - The `{here}` package in `R` is great for this
+  
+## Problem: Coordinating with collaborators
+
+* Where to put data that multiple people will work with?
+* Where to put intermediate/processed data?
+* Where to indicate the code that created those processed data files?
+* How to divvy up tasks and know who did what?
+* Need to agree on directory structure and file naming conventions
+
+[GitHub is (I think) the ideal solution, but not always feasible.]{.secondary}
+
+## Problem: Collaborators who don’t use GitHub
+
+* Use GitHub yourself
+* Copy files to/from some shared space
+    - Ideally, in an automated way (Dropbox, S3 Bucket)
+    - Avoid Word at all costs. Google Docs if needed.
+    - Word and Git do not mix
+    - [Last resort:]{.secondary} Word file in Dropbox. Everything else nicely organized on your end. Rmd file with similar structure to Manuscript that does the analysis.
+* Commit their changes.
+
+. . .
+
+Overleaf has Git built in (paid tier). I don't like Overleaf. Costs money, the viewer is crap and so is the editor. I suggest you avoid it.
+
+
+## Using Rmarkdown/Quarto for most things
+
+### Your goal is to [Avoid at all costs]{.secondary}:
+
+* "How did I create this plot?"
+* "Why did I decide to omit those six samples?"
+* "Where (on the web) did I find these data?"
+* "What was that interesting gene/feature/predictor?"
+
+<hr>
+ 
+Really useful resource:
+
+* Emily Reiderer [RmdDD](https://emilyriederer.netlify.app/post/rmarkdown-driven-development/)
+* Talk [Slides](https://www.slideshare.net/EmilyRiederer/rmarkdown-driven-development-rstudioconf-2020)
+
+# My workflow
+
+## The basics
+
+### 1. 
+
+I do all class documents in Rmarkdown/Quarto. Notes, slides, etc. Organized in Github repos:
+
+```
+├── github-org
+│  ├── admm-cd
+│  ├── class-management
+│  ├── convexity-exercises
+...
+│  └── useful-materials
+├── instructor-private
+│  ├── README.md
+│  └── brief-summary
+└── student-public
+    ├── README.md
+    ├── docs
+    └── lecture-slides
+```
+
+
+## The basics
+
+### 2. 
+
+When working out new code for a project, I use a combination of R package (as I get close to completion) and Rmarkdown.
+
+* Many stat journals require reproducible, documented code. An R package is great for this.
+* Rmarkdown alone lets me document as I go.
+    
+### 3. 
+
+My students are required to give me reports in Rmarkdown or Google docs (for practice).
+
+## For professional presentations
+
+~~I use Rmarkdown + Beamer:~~ Now I use Rmd + Xaringan (see [`dajmcdon/talk-template`](https://github.com/dajmcdon/talk-template))
+
+```{{yaml}}
+---
+title: "Statistical approaches to epidemic forecasting"
+author: "Daniel J. McDonald"
+date: "10 February 2023"
+output:
+  xaringan::moon_reader:
+    css: [src/xaringan-themer.css, src/slides-style.css]
+    nature:
+      beforeInit: ["src/macros.js", "https://platform.twitter.com/widgets.js"]
+      highlightStyle: github
+      highlightLines: true
+      ratio: 16:9
+      slideNumber: true
+      countIncrementalSlides: true
+    seal: false
+---
+```
+
+## The old presentation (when I was in Grad School)
+
+1. Write lots of LaTeX, `R` code in separate files
+2. Need a figure. Run `R` code, get figure, save as `.pdf`.
+3. Recompile LaTeX. Axes are unreadable. Back to `R`, rerun `R` code, ...
+4. Recompile LaTeX. Can't distinguish lines. Back to `R`, rerun `R` code, ...
+5. Etc, etc.
+
+### Now:  
+Code and Text live in one file. I just recompile.
+
+## The old manuscript
+
+Similar to the old presentation.
+
+### Now:  
+
+1. `R` package with documented code, available on GitHub.  
+2. One script to run the analysis, one to gather the results.  
+3. One `.Rmd` file to take in the results, do preprocessing, generate all figures.  
+4. LaTeX file on Journal style.
+
+### The optimal
+
+Same as above but with a MAKEFILE to automatically run parts of 1--4 as needed
+

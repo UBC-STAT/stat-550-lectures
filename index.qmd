@@ -1,6 +1,11 @@
 ---
 toc: false
 title: Lecture slides
+format: 
+  html:
+    theme: [cosmo, assets/styles.scss]
+    css: styles.css
+    toc: true
 ---
 
 :::{.callout-important}

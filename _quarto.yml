@@ -1,11 +1,12 @@
 project:
   type: website
-  resources:
-    - "slides/"
   render:
-    - "*.qmd"
-    - "!slides/*.Rmd"
-
+    - index.qmd
+    - slides/*.qmd
+    - "!slides/*.rmd"
+execute:
+  freeze: auto
+editor: source
 website:
   title: "UBC Stat550 2023"
   page-footer:
@@ -27,11 +28,3 @@ website:
       - text: Github
         url: https://github.com/stat550-2023
         icon: github
-
-
-format:
-  html:
-    theme: [cosmo, assets/styles.scss]
-    css: styles.css
-    toc: true
-

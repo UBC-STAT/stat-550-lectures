@@ -1,0 +1,167 @@
+---
+title: "Introduction and Second half pivot"
+format: revealjs
+---
+
+
+
+## About me
+
+```{r setup, include=FALSE}
+source("qmd-config.R")
+```
+
+::::{.columns}
+:::{.column width="50%"}
+-   Daniel J. McDonald
+-   daniel@stat.ubc.ca 
+-   <http://dajmcdon.github.io>
+-   Associate Professor, Department of Statistics 
+:::
+:::{.column width="50%"}
+* Moved to UBC in mid-March 2020, 2 days before the border closed
+* Previously a Stats Prof at Indiana University for 8 years
+:::
+::::
+
+. . .
+
+![](https://weareiu.com/wp-content/uploads/2018/12/map-1.png){fig-align="center" width="50%"}
+
+
+## No More Canvas!!
+
+See the website: 
+
+<https://ubc-stat.github.io/stat-550/>
+
+<br>
+<hr>
+<br>
+
+You'll find
+
+* announcements
+* schedule
+* lecture slides / notes
+
+(Grades still on Canvas)
+
+
+
+## Course communication
+
+:::: {.columns}
+::: {.column width="50%"}
+
+### Website:
+
+<https://ubc-stat.github.io/stat-550>
+
+* Hosted on GitHub.
+
+* Links to slides and all materials
+
+* Syllabus is there. Be sure to read it. (same idea as before)
+
+
+### Slack:
+
+* This is our discussion board.
+
+* Note that this data is hosted on servers outside of Canada. You may wish to use a pseudonym to protect your privacy.
+
+* We'll use a Channel in the UBC-Stat Workspace
+:::
+
+::: {.column width="50%"}
+
+### Github organization
+
+* Linked from the website.
+
+* This is where you complete/submit assignments/projects/in-class-work
+
+* This is also hosted on US servers <https://github.com/Stat550-2022>
+:::
+::::
+
+## Why these?
+
+1. Yes, some data is hosted on servers in the US.
+1. But in the real world, no one uses Canvas/Piazza, so why not learn things they do use?
+1. Canvas is dumb and hard to organize.
+1. GitHub is free and actually useful.
+1. Much easier to communicate, "grade" or comment on your work
+1. Much more DS friendly
+1. Note that MDS uses both of these, the department uses both, etc.
+1. More on all this later.
+
+. . .
+
+Slack help from MDS --- [features](https://ubc-mds.github.io/resources_pages/slack/) and [rules](https://ubc-mds.github.io/resources_pages/slack_asking_for_help/)
+
+
+## What are the goals of Stat 550?
+
+<br>
+
+### 1. Prepare you to do the consulting practicum (Stat 551)
+
+
+<br><br>
+
+### 2. You're a captive audience, so I can teach you some skills you'll need for 
+    
+* MSc Thesis/Project or PhD research
+* Employment in Data Science / Statistics.
+* These are often things that will help with the first as well
+
+## 1. Prepare you for the consulting practicum (Stat 551)
+
+* understand how the data was collected
+
+* implications of the collection process for analysis
+
+* organize data for analysis
+
+* determine appropriate methods for analysis that [answer's the client's questions]{.secondary}
+
+* interpret the results
+
+* present and communicate the results
+
+::: {.notes}
+* In most courses you get nice clean data. Getting to "nice clean data" is non-trivial
+* In most courses things are "IID", negligible missingness
+* Usually, the question is formed in statistical langauge, here, you are responsible for "translating"
+* Interpretation has to be "translated back"
+* Presentation skills --- important everywhere
+:::
+
+## 2. Some skills you'll need
+
+* Version control
+* Reproducible reports
+* Writing experience: genre is important
+* Presentation skills
+* Better coding practice
+* Documentation
+
+## Computing
+
+* All work done in R/RMarkdown. 
+* No you can't use Python. Or Stata or SPSS.
+* No you can't use Jupyter Notebooks.
+* All materials on Github. 
+* You will learn to use Git/GitHub/RStudio/Rmarkdown.
+* Slack for discussion/communication
+
+## Getting setup
+
+1. Add to Slack Channel: <https://ubc-stat.slack.com/archives/C04QUDNJG9X>
+2. Github account: <https://github.com/> 
+3. Add to the Github Org --- tell me your account
+4. RStudio synchronization
+
+
