@@ -1,9 +1,11 @@
 project:
   type: website
-  output-dir: "_site"
   render:
-    - "*.qmd"
-    - "!slides/*.Rmd"
+    - index.qmd
+    - slides/*.qmd
+    - "!slides/*.rmd"
+
+editor: source
 
 website:
   title: "UBC Stat550 2023"
@@ -26,15 +28,3 @@ website:
       - text: Github
         url: https://github.com/stat550-2023
         icon: github
-
-
-format:
-  html:
-    theme: [cosmo, assets/styles.scss]
-    css: styles.css
-    toc: true
-  revealjs:
-    theme: [default, slides/themer.scss]
-    width: 1600
-    height: 900
-
