@@ -4,6 +4,426 @@
     "href": "index.html",
     "title": "Lecture slides",
     "section": "",
-    "text": "Important\n\n\n\nLecture slides have not been updated since last year.\n\n\n\nSyllabus and introduction\nGit and Github\nOrganization\nGiving talks\nUnit tests\nModel selection\nTesting non-nested models, contrasts, dummy variables, interpreting coefficients in non-Gaussian regression.\nRegularization and modern methods\nReading statistical papers\nASDa presentation \nCluster computing"
+    "text": "Important\n\n\n\nLecture slides have not been updated since last year.\n\n\n\nSyllabus and introduction\nGit and Github\nOrganization\nGiving talks\nUnit tests\nModel selection\nTesting non-nested models, contrasts, dummy variables, interpreting coefficients in non-Gaussian regression.\nRegularization and modern methods\nReading statistical papers  \nCluster computing"
+  },
+  {
+    "objectID": "slides/git.html#why-version-control",
+    "href": "slides/git.html#why-version-control",
+    "title": "Version control",
+    "section": "Why version control?",
+    "text": "Why version control?\n\n\n\n\n\n\nMuch of this lecture is borrowed/stolen from Colin Rundel and Karl Broman"
+  },
+  {
+    "objectID": "slides/git.html#why-version-control-1",
+    "href": "slides/git.html#why-version-control-1",
+    "title": "Version control",
+    "section": "Why version control?",
+    "text": "Why version control?\n\nSimple formal system for tracking all changes to a project\nTime machine for your projects\n\nTrack blame and/or praise\nRemove the fear of breaking things\n\nLearning curve is steep, but when you need it you REALLY need it\n\n\n\n\nWords of wisdom\n\n\nYour closest collaborator is you six months ago, but you don’t reply to emails.\n– Paul Wilson"
+  },
+  {
+    "objectID": "slides/git.html#why-git",
+    "href": "slides/git.html#why-git",
+    "title": "Version control",
+    "section": "Why Git",
+    "text": "Why Git\n\n\n\nYou could use something like Box or Dropbox\nThese are poor-man’s version control\nGit is much more appropriate\nIt works with large groups\nIt’s very fast\nIt’s much better at fixing mistakes\nTech companies use it (so it’s in your interest to have some experience)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nImportant\n\n\nThis will hurt, but what doesn’t kill you, makes you stronger."
+  },
+  {
+    "objectID": "slides/git.html#overview",
+    "href": "slides/git.html#overview",
+    "title": "Version control",
+    "section": "Overview",
+    "text": "Overview\n\ngit is a command line program that lives on your machine\nIf you want to track changes in a directory, you type git init\nThis creates a (hidden) directory called .git\nThe .git directory contains a history of all changes made to “versioned” files\nThis top directory is referred to as a “repository” or “repo”\nhttp://github.com is a service that hosts a repo remotely and has other features: issues, project boards, pull requests, renders .ipynb & .md\nSome IDEs (pycharm, RStudio, VScode) have built in git\ngit/GitHub is broad and complicated. Here, just what you need"
+  },
+  {
+    "objectID": "slides/git.html#aside-on-built-in-command-line",
+    "href": "slides/git.html#aside-on-built-in-command-line",
+    "title": "Version control",
+    "section": "Aside on “Built-in” & “Command line”",
+    "text": "Aside on “Built-in” & “Command line”\n\n\n\n\n\n\nTip\n\n\nFirst things first, RStudio and the Terminal\n\n\n\n\nCommand line is the “old” type of computing. You type commands at a prompt and the computer “does stuff”.\nYou may not have seen where this is. RStudio has one built in called “Terminal”\nThe Mac System version is also called “Terminal”. If you have a Linux machine, this should all be familiar.\nWindows is not great at this.\nTo get the most out of Git, you have to use the command line."
+  },
+  {
+    "objectID": "slides/git.html#typical-workflow",
+    "href": "slides/git.html#typical-workflow",
+    "title": "Version control",
+    "section": "Typical workflow",
+    "text": "Typical workflow\n\nDownload a repo from Github\n\ngit clone https://github.com/stat550-2021/lecture-slides.git\n\nCreate a branch\n\ngit branch <branchname>\n\nMake changes to your files.\nAdd your changes to be tracked (“stage” them)\n\ngit add <name/of/tracked/file>\n\nCommit your changes\n\ngit commit -m \"Some explanatory message\"\nRepeat 3–5 as needed. Once you’re satisfied\n\nPush to Github\n\ngit push\ngit push -u origin <branchname>"
+  },
+  {
+    "objectID": "slides/git.html#what-should-be-tracked",
+    "href": "slides/git.html#what-should-be-tracked",
+    "title": "Version control",
+    "section": "What should be tracked?",
+    "text": "What should be tracked?\n\nDefinitely\ncode, markdown documentation, tex files, bash scripts/makefiles, …\n\nPossibly\nlogs, jupyter notebooks, images (that won’t change), …\n\nQuestionable\nprocessed data, static pdfs, …\n\nDefinitely not\nfull data, continually updated pdfs, other things compiled from source code, …"
+  },
+  {
+    "objectID": "slides/git.html#what-things-to-track",
+    "href": "slides/git.html#what-things-to-track",
+    "title": "Version control",
+    "section": "What things to track",
+    "text": "What things to track\n\nYou decide what is “versioned”.\nA file called .gitignore tells git files or types to never track\n\n# History files\n.Rhistory\n.Rapp.history\n\n# Session Data files\n.RData\n\n# User-specific files\n.Ruserdata\n\n# Compiled junk\n*.o\n*.so\n*.DS_Store\n\nShortcut to track everything (use carefully):\n\ngit add ."
+  },
+  {
+    "objectID": "slides/git.html#rules",
+    "href": "slides/git.html#rules",
+    "title": "Version control",
+    "section": "Rules",
+    "text": "Rules\n\nEach team has their own repo\nMake a PR against main to submit\nPeer evaluations are done via PR review (also send to Estella)\nYOU must make at least 5 commits (fewer will lead to deductions)\nI review your work and merge the PR\n\nProject submissions are done similarly."
+  },
+  {
+    "objectID": "slides/git.html#whats-a-pr",
+    "href": "slides/git.html#whats-a-pr",
+    "title": "Version control",
+    "section": "What’s a PR?",
+    "text": "What’s a PR?\n\nThis exists on Github (not git)\nDemonstration"
+  },
+  {
+    "objectID": "slides/git.html#some-things-to-be-aware-of",
+    "href": "slides/git.html#some-things-to-be-aware-of",
+    "title": "Version control",
+    "section": "Some things to be aware of",
+    "text": "Some things to be aware of\n\nmaster vs main\nIf you think you did something wrong, stop and ask for help\nThere are guardrails in place. But those won’t stop a bulldozer.\nThe hardest part is the initial setup. Then, this should all be rinse-and-repeat.\nThis book is great: Happy Git with R\n\nSee Chapter 6 if you have install problems.\nSee Chapter 10 for credential caching (avoid typing a password all the time)\nSee Chapter 13 if RStudio can’t find git"
+  },
+  {
+    "objectID": "slides/git.html#the-maindevelopbranch-workflow",
+    "href": "slides/git.html#the-maindevelopbranch-workflow",
+    "title": "Version control",
+    "section": "The main/develop/branch workflow",
+    "text": "The main/develop/branch workflow\n\nWhen working on your own\n\nDon’t NEED branches (but you should use them, really)\nI make a branch if I want to try a modification without breaking what I have.\n\nWhen working on a large team with production grade software\n\nmain is protected, released version of software (maybe renamed to release)\ndevelop contains things not yet on main, but thoroughly tested\nOn a schedule (once a week, once a month) develop gets merged to main\nYou work on a feature branch off develop to build your new feature\nYou do a PR against develop. Supervisors review your contributions\n\n\n\nI and many DS/CS/Stat faculty use this workflow with my lab."
+  },
+  {
+    "objectID": "slides/git.html#protection",
+    "href": "slides/git.html#protection",
+    "title": "Version control",
+    "section": "Protection",
+    "text": "Protection\n\nTypical for your PR to trigger tests to make sure you don’t break things\nTypical for team members or supervisors to review your PR for compliance\n\n\n\n\n\n\n\nTip\n\n\nI suggest you adopt the “production” version for your Team Assignments"
+  },
+  {
+    "objectID": "slides/git.html#guardrails",
+    "href": "slides/git.html#guardrails",
+    "title": "Version control",
+    "section": "Guardrails",
+    "text": "Guardrails\n\nThe .github directory contains interactions with GitHub\n\nActions: On push / PR / other GitHub does something on their server (builds a website, runs tests on code)\nPR templates: Little admonitions when you open a PR\nBranch protection: prevent you from doing stuff\n\nIn this course, I protect main so that you can’t push there\n\n\n\n\n\n\n\nWarning\n\n\nIf you try to push to main, it will give an error like\nremote: error: GH006: Protected branch update failed for refs/heads/main.\nThe fix is: make a new branch, then push that."
+  },
+  {
+    "objectID": "slides/git.html#operations-in-rstudio",
+    "href": "slides/git.html#operations-in-rstudio",
+    "title": "Version control",
+    "section": "Operations in Rstudio",
+    "text": "Operations in Rstudio\n\n\n\nStage\nCommit\nPush\nPull\nCreate a branch\n\n\n\n\n\n\n\nCovers:\n\n\n\nEverything to do your HW / Project if you’re careful\nPlus most other things you “want to do”\n\n\n\n\n\nCommand line versions (of the same)\ngit add <name/of/file>\n\ngit commit -m \"some useful message\"\n\ngit push\n\ngit pull\n\ngit checkout -b <name/of/branch>"
+  },
+  {
+    "objectID": "slides/git.html#other-useful-stuff-but-command-line-only",
+    "href": "slides/git.html#other-useful-stuff-but-command-line-only",
+    "title": "Version control",
+    "section": "Other useful stuff (but command line only)",
+    "text": "Other useful stuff (but command line only)\n\n\nInitializing\ngit config user.name --global \"Daniel J. McDonald\"\ngit config user.email --global \"daniel@stat.ubc.ca\"\ngit config core.editor --global nano \n# or emacs or ... (default is vim)\nStaging\ngit add name/of/file # stage 1 file\ngit add . # stage all\nCommitting\n# stage/commit simultaneously\ngit commit -am \"message\" \n\n# open editor to write long commit message\ngit commit \nPushing\n# If branchname doesn't exist\n# on remote, create it and push\ngit push -u origin branchname\n\nBranching\n# switch to branchname, error if uncommitted changes\ngit checkout branchname \n# switch to a previous commit\ngit checkout aec356\n\n# create a new branch\ngit branch newbranchname\n# create a new branch and check it out\ngit checkout -b newbranchname\n\n# merge changes in branch2 onto branch1\ngit checkout branch1\ngit merge branch2\n\n# grab a file from branch2 and put it on current\ngit checkout branch2 -- name/of/file\n\ngit branch -v # list all branches\nCheck the status\ngit status\ngit remote -v # list remotes\ngit log # show recent commits, msgs"
+  },
+  {
+    "objectID": "slides/git.html#conflicts",
+    "href": "slides/git.html#conflicts",
+    "title": "Version control",
+    "section": "Conflicts",
+    "text": "Conflicts\n\nSometimes you merge things and “conflicts” happen.\nMeaning that changes on one branch would overwrite changes on a different branch.\n\n\n\n\nThey look like this:\n\nHere are lines that are either unchanged from\nthe common ancestor, or cleanly resolved \nbecause only one side changed.\n\nBut below we have some troubles\n<<<<<<< yours:sample.txt\nConflict resolution is hard;\nlet's go shopping.\n=======\nGit makes conflict resolution easy.\n>>>>>>> theirs:sample.txt\n\nAnd here is another line that is cleanly \nresolved or unmodified.\n\nYou get to decide, do you want to keep\n\nYour changes (above ======)\nTheir changes (below ======)\nBoth.\nNeither.\n\nBut always delete the <<<<<, ======, and >>>>> lines.\nOnce you’re satisfied, committing resolves the conflict."
+  },
+  {
+    "objectID": "slides/git.html#some-other-pointers",
+    "href": "slides/git.html#some-other-pointers",
+    "title": "Version control",
+    "section": "Some other pointers",
+    "text": "Some other pointers\n\nCommits have long names: 32b252c854c45d2f8dfda1076078eae8d5d7c81f\n\nIf you want to use it, you need “enough to be unique”: 32b25\n\nOnline help uses directed graphs in ways different from statistics:\n\nIn stats, arrows point from cause to effect, forward in time\nIn git docs, it’s reversed, they point to the thing on which they depend\n\n\nCheat sheet\nhttps://training.github.com/downloads/github-git-cheat-sheet.pdf"
+  },
+  {
+    "objectID": "slides/git.html#how-to-undo-in-3-scenarios",
+    "href": "slides/git.html#how-to-undo-in-3-scenarios",
+    "title": "Version control",
+    "section": "How to undo in 3 scenarios",
+    "text": "How to undo in 3 scenarios\n\nSuppose we’re concerned about a file named README.md\nOften, git status will give some of these as suggestions\n\n\n\n1. Saved but not staged\n\nIn RStudio, select the file and click   then select  Revert…\n\n# grab the previously committed version\ngit checkout -- README.md \n2. Staged but not committed\n\nIn RStudio, uncheck the box by the file, then use the method above.\n\n# unstage\ngit reset HEAD README.md\ngit checkout -- README.md\n\n3. Committed\n\nNot easy to do in RStudio…\n\n# check the log to see where you made the chg, \ngit log\n# go one step before that (eg to 32b252)\n# and grab that earlier version\ngit checkout 32b252 -- README.md\n\n# alternatively\n# if it happens to also be on another branch\ngit checkout otherbranch -- README.md"
+  },
+  {
+    "objectID": "slides/git.html#recovering-from-things",
+    "href": "slides/git.html#recovering-from-things",
+    "title": "Version control",
+    "section": "Recovering from things",
+    "text": "Recovering from things\n\nAccidentally did work on main, Tried to Push but got refused\n\n# make a new branch with everything, but stay on main\ngit branch newbranch\n# find out where to go to\ngit log\n# undo everything after ace2193\ngit reset --hard ace2193\ngit checkout newbranch\n\nMade a branch, did lots of work, realized it’s trash, and you want to burn it\n\ngit checkout main\ngit branch -d badbranch\n\nAnything more complicated, either post to Slack or LMGTFY"
+  },
+  {
+    "objectID": "slides/organization.html#i-urge-you-to-consult",
+    "href": "slides/organization.html#i-urge-you-to-consult",
+    "title": "Organization",
+    "section": "I urge you to consult:",
+    "text": "I urge you to consult:\nKarl Broman’s Notes"
+  },
+  {
+    "objectID": "slides/organization.html#organizing-your-stuff",
+    "href": "slides/organization.html#organizing-your-stuff",
+    "title": "Organization",
+    "section": "Organizing your stuff",
+    "text": "Organizing your stuff\n\n\n├── Advising\n│   ├── arash\n│   ├── gian-carlo\n├── CV\n├── Computing\n│   ├── FKF\n│   ├── batchtools.slurm.tmpl\n│   ├── computecanada_notes.md\n│   ├── ghclass\n│   └── spatio-temporal-exp-fam\n├── Grants\n│   ├── B&E JSM 2010\n│   ├── CANSSI RRP 2020\n│   ├── NSERC 2020\n├── LettersofRec\n├── Manuscripts\n│   ├── Old\n├── Referee reports\n├── Talks\n│   ├── JobTalk2020\n│   ├── ubc-stat-covid-talk\n│   └── utoronto-grad-advice\n├── Teaching\n│   ├── stat-406\n│   ├── stat-550\n│   ├── zzzz CMU TA\n│   └── zzzz booth\n└── Website\n\nInside a project\n.\n├── README.md\n├── Summary of Goals.rtf\n├── cluster_output\n├── code\n├── data\n├── dsges-github.Rproj\n├── manuscript\n└── waldman-triage\n\n\n\nSeparate raw / processed data\nInclude a README\nIdeally have a MAKEFILE\nUnder version control, shared with collaborator"
+  },
+  {
+    "objectID": "slides/organization.html#basic-principles",
+    "href": "slides/organization.html#basic-principles",
+    "title": "Organization",
+    "section": "Basic principles",
+    "text": "Basic principles\n\nDevelop your own system\nPut everything in a common directory\nBe consistent – directory structure; names\nSeparate raw from processed data\nSeparate code from data\nIt should be obvious what code created what files, and what the dependencies are.\nNo hand-editing of data files\nDon’t use spaces in file names\nUse relative paths, not absolute paths\n\n../blah not ~/blah or /users/dajmcdon/blah\nThe {here} package in R is great for this"
+  },
+  {
+    "objectID": "slides/organization.html#problem-coordinating-with-collaborators",
+    "href": "slides/organization.html#problem-coordinating-with-collaborators",
+    "title": "Organization",
+    "section": "Problem: Coordinating with collaborators",
+    "text": "Problem: Coordinating with collaborators\n\nWhere to put data that multiple people will work with?\nWhere to put intermediate/processed data?\nWhere to indicate the code that created those processed data files?\nHow to divvy up tasks and know who did what?\nNeed to agree on directory structure and file naming conventions\n\nGitHub is (I think) the ideal solution, but not always feasible."
+  },
+  {
+    "objectID": "slides/organization.html#problem-collaborators-who-dont-use-github",
+    "href": "slides/organization.html#problem-collaborators-who-dont-use-github",
+    "title": "Organization",
+    "section": "Problem: Collaborators who don’t use GitHub",
+    "text": "Problem: Collaborators who don’t use GitHub\n\nUse GitHub yourself\nCopy files to/from some shared space\n\nIdeally, in an automated way (Dropbox, S3 Bucket)\nAvoid Word at all costs. Google Docs if needed.\nWord and Git do not mix\nLast resort: Word file in Dropbox. Everything else nicely organized on your end. Rmd file with similar structure to Manuscript that does the analysis.\n\nCommit their changes.\n\n\nOverleaf has Git built in (paid tier). I don’t like Overleaf. Costs money, the viewer is crap and so is the editor. I suggest you avoid it."
+  },
+  {
+    "objectID": "slides/organization.html#using-rmarkdownquarto-for-most-things",
+    "href": "slides/organization.html#using-rmarkdownquarto-for-most-things",
+    "title": "Organization",
+    "section": "Using Rmarkdown/Quarto for most things",
+    "text": "Using Rmarkdown/Quarto for most things\nYour goal is to Avoid at all costs:\n\n“How did I create this plot?”\n“Why did I decide to omit those six samples?”\n“Where (on the web) did I find these data?”\n“What was that interesting gene/feature/predictor?”\n\n\nReally useful resource:\n\nEmily Reiderer RmdDD\nTalk Slides"
+  },
+  {
+    "objectID": "slides/organization.html#the-basics",
+    "href": "slides/organization.html#the-basics",
+    "title": "Organization",
+    "section": "The basics",
+    "text": "The basics\n1.\nI do all class documents in Rmarkdown/Quarto. Notes, slides, etc. Organized in Github repos:\n├── github-org\n│  ├── admm-cd\n│  ├── class-management\n│  ├── convexity-exercises\n...\n│  └── useful-materials\n├── instructor-private\n│  ├── README.md\n│  └── brief-summary\n└── student-public\n    ├── README.md\n    ├── docs\n    └── lecture-slides"
+  },
+  {
+    "objectID": "slides/organization.html#the-basics-1",
+    "href": "slides/organization.html#the-basics-1",
+    "title": "Organization",
+    "section": "The basics",
+    "text": "The basics\n2.\nWhen working out new code for a project, I use a combination of R package (as I get close to completion) and Rmarkdown.\n\nMany stat journals require reproducible, documented code. An R package is great for this.\nRmarkdown alone lets me document as I go.\n\n3.\nMy students are required to give me reports in Rmarkdown or Google docs (for practice)."
+  },
+  {
+    "objectID": "slides/organization.html#for-professional-presentations",
+    "href": "slides/organization.html#for-professional-presentations",
+    "title": "Organization",
+    "section": "For professional presentations",
+    "text": "For professional presentations\nI use Rmarkdown + Beamer: Now I use Rmd + Xaringan (see dajmcdon/talk-template)\n---\ntitle: \"Statistical approaches to epidemic forecasting\"\nauthor: \"Daniel J. McDonald\"\ndate: \"10 February 2023\"\noutput:\n  xaringan::moon_reader:\n    css: [src/xaringan-themer.css, src/slides-style.css]\n    nature:\n      beforeInit: [\"src/macros.js\", \"https://platform.twitter.com/widgets.js\"]\n      highlightStyle: github\n      highlightLines: true\n      ratio: 16:9\n      slideNumber: true\n      countIncrementalSlides: true\n    seal: false\n---"
+  },
+  {
+    "objectID": "slides/organization.html#the-old-presentation-when-i-was-in-grad-school",
+    "href": "slides/organization.html#the-old-presentation-when-i-was-in-grad-school",
+    "title": "Organization",
+    "section": "The old presentation (when I was in Grad School)",
+    "text": "The old presentation (when I was in Grad School)\n\nWrite lots of LaTeX, R code in separate files\nNeed a figure. Run R code, get figure, save as .pdf.\nRecompile LaTeX. Axes are unreadable. Back to R, rerun R code, …\nRecompile LaTeX. Can’t distinguish lines. Back to R, rerun R code, …\nEtc, etc.\n\nNow:\nCode and Text live in one file. I just recompile."
+  },
+  {
+    "objectID": "slides/organization.html#the-old-manuscript",
+    "href": "slides/organization.html#the-old-manuscript",
+    "title": "Organization",
+    "section": "The old manuscript",
+    "text": "The old manuscript\nSimilar to the old presentation.\nNow:\n\nR package with documented code, available on GitHub.\n\nOne script to run the analysis, one to gather the results.\n\nOne .Rmd file to take in the results, do preprocessing, generate all figures.\n\nLaTeX file on Journal style.\n\nThe optimal\nSame as above but with a MAKEFILE to automatically run parts of 1–4 as needed"
+  },
+  {
+    "objectID": "slides/presentations.html#structure",
+    "href": "slides/presentations.html#structure",
+    "title": "Giving presentations",
+    "section": "Structure",
+    "text": "Structure\n\nStrategy (applies to papers too)\nDos and don’ts\nPersonal preferences"
+  },
+  {
+    "objectID": "slides/presentations.html#genre",
+    "href": "slides/presentations.html#genre",
+    "title": "Giving presentations",
+    "section": "Genre",
+    "text": "Genre\nTalks take many forms (like papers)\n\nDepartment seminar\nShort conference presentation\nClass lecture\n...\n\nCalibrate your talk to the Genre and the Audience\n\n\nA job talk takes much more work than a class presentation\nFor context, after much practice, it takes me about 1 hour per minute of presentation length, depending on the amount of polish.\nMy course lectures take about 4x the target duration.\nGeneral ideas are the same for all styles."
+  },
+  {
+    "objectID": "slides/presentations.html#audience",
+    "href": "slides/presentations.html#audience",
+    "title": "Giving presentations",
+    "section": "Audience",
+    "text": "Audience\n\nThink about who you are talking to\n\nStatisticians?\nStudents?\nPotential employer?\nPeople with PhD’s but in other disciplines?\nYour grandma?\n\nRegardless of the audience, I think of dividing the talk roughly in 3rds."
+  },
+  {
+    "objectID": "slides/presentations.html#content",
+    "href": "slides/presentations.html#content",
+    "title": "Giving presentations",
+    "section": "Content",
+    "text": "Content\nEach part is a little mini-talk\n\nStarts with the general idea\nDevelops a few details. Strategy: problem/solution or question/answer\nEnds with a takeaway\n\nBut these parts are recalibrated to the audience.\n\nYour Grandma doesn’t want to see math.\nYour employer might, but doesn’t want to hear about \\(\\sigma\\)-fields.\nStatisticians don’t want to see proofs (but might want a sketch).\n..."
+  },
+  {
+    "objectID": "slides/presentations.html#story-structure",
+    "href": "slides/presentations.html#story-structure",
+    "title": "Giving presentations",
+    "section": "Story structure",
+    "text": "Story structure\n\n\n\n\n\n\nWhat I often see…\n\n\nOnce upon a time, a young MSc student went into the woods of theory and found some trees. First they looked at one tree, it was oak. Then the looked at the next tree, it was maple. Then they wondered if trees could talk. After three months of wandering, they saw a house…\n\n\n\n\n\n\n\n\n\n\nThe attention grabber\n\n\nAxe-wielding woodsman saves student from wolf attack!\n\n\n\n\n\n\n(Enough details to give the headline.)\nHeadline result.\nHow do we know the result is real. What are the details of computation, inference, methodology.\nDemonstration with empirics."
+  },
+  {
+    "objectID": "slides/presentations.html#you-should-consider",
+    "href": "slides/presentations.html#you-should-consider",
+    "title": "Giving presentations",
+    "section": "You should consider…",
+    "text": "You should consider…\n\nAttention span diminishes quickly.\nWhat are the 3-5 takeaways?\nHit your main result at the beginning: this is what I can do that I couldn’t before."
+  },
+  {
+    "objectID": "slides/presentations.html#the-ideal-map",
+    "href": "slides/presentations.html#the-ideal-map",
+    "title": "Giving presentations",
+    "section": "The ideal map",
+    "text": "The ideal map\nMap out what you’ve done.\n\nWhat did you find?\nWhat are the implications? Why does audience care?\nHow do we do it?\n\n\nAvoid wandering in the wilderness:\n\nFirst we did this;\nBut that didn’t work, so we tried …\nBut then we added …\nFinally we got to the beach …\nAnd the water was nice …\n\nYou left your audience somewhere in the wilderness."
+  },
+  {
+    "objectID": "slides/presentations.html#words",
+    "href": "slides/presentations.html#words",
+    "title": "Giving presentations",
+    "section": "Words",
+    "text": "Words\n\n\nToo many words on a slide is bad\n\nBullet points\nToo densely concentrated are bad\nAre bad\nAre hard to focus on\n\n\nEmpty space is your friend\n\nLorem markdownum et moras et ponendi odores, neu magna per! Tyria meo iungitur videt, frigore terras rogis Anienis poteram, dant. His vallem arma corpore vident nunc nivibus avus, dea. Spatium luce certa cupiunt, lina. Amabam opem, Iovis fecundaque et parum.\nConplecti videndo altum et hunc Iovi fronte maris, cur Aiax, iam fata morsibus, et. Aede virum annis audit modo: meus ramis videri: nec quod insidiisque Aonio tenuem, AI. Trames Iason: nocent hortatus lacteus praebita paternos petit, Paridis aptus prius ut origo furiisque. Mercibus sis nullo aliudve Amathunta sufficit ululatibus, praevalidusque segnis et Dryopen."
+  },
+  {
+    "objectID": "slides/presentations.html#images",
+    "href": "slides/presentations.html#images",
+    "title": "Giving presentations",
+    "section": "Images",
+    "text": "Images\n\n\nPictures are good\n\nFlow charts are good.\n\nCareful use of colour is good.\n\nSize is good.\n\ntoo much variation is distracting\n\n\n\n\n\nHow long did you stare at the cat?"
+  },
+  {
+    "objectID": "slides/presentations.html#graphics",
+    "href": "slides/presentations.html#graphics",
+    "title": "Giving presentations",
+    "section": "Graphics",
+    "text": "Graphics\n\n\n\n\n\n\n\n\nImportant\n\n\nDefaults are almost always terrible."
+  },
+  {
+    "objectID": "slides/presentations.html#issues-with-the-preceding",
+    "href": "slides/presentations.html#issues-with-the-preceding",
+    "title": "Giving presentations",
+    "section": "Issues with the preceding",
+    "text": "Issues with the preceding\n\nColours are awful\nGrey background is distracting\nText size is too small\nLegend position on the side is strange?\nNumbers on the y-axis are nonesense\nWith barchart, y-axis should start at 0.\n.png vs .svg"
+  },
+  {
+    "objectID": "slides/presentations.html#graphics-1",
+    "href": "slides/presentations.html#graphics-1",
+    "title": "Giving presentations",
+    "section": "Graphics",
+    "text": "Graphics"
+  },
+  {
+    "objectID": "slides/presentations.html#again",
+    "href": "slides/presentations.html#again",
+    "title": "Giving presentations",
+    "section": "Again",
+    "text": "Again\n\n\n\n\n\n\n\nTip\n\n\nI like this, but ~10% of men are colour blind (including some faculty in this department)."
+  },
+  {
+    "objectID": "slides/presentations.html#simulation",
+    "href": "slides/presentations.html#simulation",
+    "title": "Giving presentations",
+    "section": "Simulation",
+    "text": "Simulation"
+  },
+  {
+    "objectID": "slides/presentations.html#jargon",
+    "href": "slides/presentations.html#jargon",
+    "title": "Giving presentations",
+    "section": "Jargon",
+    "text": "Jargon\n\nBe wary of acronyms (MLE, BLUP, RKHS)\nAgain, think of your audience. MLE is fine for any statistician.\nOthers need definitions in words and written on the slide\nSame for math notation \\(\\bar{X},\\ \\mu,\\ \\sigma,\\ \\mathbf{UDV}^\\top\\)\nAnd for applied work e.g. SNP"
+  },
+  {
+    "objectID": "slides/presentations.html#things-i-hate",
+    "href": "slides/presentations.html#things-i-hate",
+    "title": "Giving presentations",
+    "section": "Things I hate",
+    "text": "Things I hate\n Saying “I’m not going to talk about …”  “I’m happy to discuss … later if you’d like”.\n Wiggling your laser pointer at every word. Highlight important things with pretty colours. Use pointer sparingly.\n Playing with your collar, your pockets, your water bottle…\n Staring at your slides …\n Displaying the total number of slides as in 6/85 in the lower right hand corner …\n Running over time. Skipping 6 slides to desperately make the time limit.\n Using the default themes:"
+  },
+  {
+    "objectID": "slides/presentations.html#never-use-tables-of-numbers",
+    "href": "slides/presentations.html#never-use-tables-of-numbers",
+    "title": "Giving presentations",
+    "section": "Never use tables of numbers",
+    "text": "Never use tables of numbers\n\nEconomists do this all the time for inexplicable reasons\nI rarely put these in papers either\nIf I’m not going to talk about it, it doesn’t go on the slide\nThere’s no way I’m going to read off the number, certainly not to 4 decimal places\nUse a graph\n\n\n\n\nA graph with 3 dots should be a table of 3 numbers.\nBut why do you have only 3 numbers?\nAny table can be a better graph.\n\n\n\n\n\n\n\nAsk yourself:\n\n\nIs this the best way to display the data? Have I summarized too much?"
+  },
+  {
+    "objectID": "slides/presentations.html#things-you-should-do",
+    "href": "slides/presentations.html#things-you-should-do",
+    "title": "Giving presentations",
+    "section": "Things you should do",
+    "text": "Things you should do\n Number your slides\n Have lots of prepared backup slides (details, answers to potential questions, further analysis)\n Practice a lot. Practice in front of others. Practice the beginning more than the rest.\n BE EXCITED. You worked hard on this. All results are cool. Play them up. You did something good and you want to tell everyone about how awesome you are. Own it.\n Take credit. Say “I showed this” not “It can be shown”."
+  },
+  {
+    "objectID": "slides/presentations.html#things-that-are-debatable",
+    "href": "slides/presentations.html#things-that-are-debatable",
+    "title": "Giving presentations",
+    "section": "Things that are debatable",
+    "text": "Things that are debatable\n\nMath talks tend to be “chalkboard”\nCS talks tend to be “sales pitch”\nStats is in the middle.\nI lean toward details with elements of salesmanship\nIf I hear your talk, I want to be able to “do” what you created. This is hard without some math.\nThis also colours my decisions about software.\n\n\n\n\n\n\n\n\nNote\n\n\nJeff Bezos banned Powerpoint from Amazon presentations"
+  },
+  {
+    "objectID": "slides/presentations.html#closing-suggestions",
+    "href": "slides/presentations.html#closing-suggestions",
+    "title": "Giving presentations",
+    "section": "Closing suggestions",
+    "text": "Closing suggestions\nSlow down\n\nGet a bottle of water before the talk. Drink it to pause on (pre-planned) key slides.\nThis will help you relax. It will also give the audience a few seconds to get the hard stuff into their head.\n\nCut back\n\nMost of your slides probably have too many words.\nAnd too much “filler” –> Kill the filler\n\nTry to move\n\nIt’s good to move physically, engage the audience\nTry to make eye contact with the whole room\nRecord yourself once to see if you do anything extraneous\n\nHave fun."
+  },
+  {
+    "objectID": "slides/syllabus.html#about-me",
+    "href": "slides/syllabus.html#about-me",
+    "title": "Introduction and Second half pivot",
+    "section": "About me",
+    "text": "About me\n\n\n\nDaniel J. McDonald\ndaniel@stat.ubc.ca\nhttp://dajmcdon.github.io\nAssociate Professor, Department of Statistics\n\n\n\nMoved to UBC in mid-March 2020, 2 days before the border closed\nPreviously a Stats Prof at Indiana University for 8 years"
+  },
+  {
+    "objectID": "slides/syllabus.html#no-more-canvas",
+    "href": "slides/syllabus.html#no-more-canvas",
+    "title": "Introduction and Second half pivot",
+    "section": "No More Canvas!!",
+    "text": "No More Canvas!!\nSee the website:\nhttps://ubc-stat.github.io/stat-550/\n\n\n\nYou’ll find\n\nannouncements\nschedule\nlecture slides / notes\n\n(Grades still on Canvas)"
+  },
+  {
+    "objectID": "slides/syllabus.html#course-communication",
+    "href": "slides/syllabus.html#course-communication",
+    "title": "Introduction and Second half pivot",
+    "section": "Course communication",
+    "text": "Course communication\n\n\nWebsite:\nhttps://ubc-stat.github.io/stat-550\n\nHosted on GitHub.\nLinks to slides and all materials\nSyllabus is there. Be sure to read it. (same idea as before)\n\nSlack:\n\nThis is our discussion board.\nNote that this data is hosted on servers outside of Canada. You may wish to use a pseudonym to protect your privacy.\nWe’ll use a Channel in the UBC-Stat Workspace\n\n\nGithub organization\n\nLinked from the website.\nThis is where you complete/submit assignments/projects/in-class-work\nThis is also hosted on US servers https://github.com/Stat550-2022"
+  },
+  {
+    "objectID": "slides/syllabus.html#why-these",
+    "href": "slides/syllabus.html#why-these",
+    "title": "Introduction and Second half pivot",
+    "section": "Why these?",
+    "text": "Why these?\n\nYes, some data is hosted on servers in the US.\nBut in the real world, no one uses Canvas/Piazza, so why not learn things they do use?\nCanvas is dumb and hard to organize.\nGitHub is free and actually useful.\nMuch easier to communicate, “grade” or comment on your work\nMuch more DS friendly\nNote that MDS uses both of these, the department uses both, etc.\nMore on all this later.\n\n\nSlack help from MDS — features and rules"
+  },
+  {
+    "objectID": "slides/syllabus.html#what-are-the-goals-of-stat-550",
+    "href": "slides/syllabus.html#what-are-the-goals-of-stat-550",
+    "title": "Introduction and Second half pivot",
+    "section": "What are the goals of Stat 550?",
+    "text": "What are the goals of Stat 550?\n\n1. Prepare you to do the consulting practicum (Stat 551)\n\n2. You’re a captive audience, so I can teach you some skills you’ll need for\n\nMSc Thesis/Project or PhD research\nEmployment in Data Science / Statistics.\nThese are often things that will help with the first as well"
+  },
+  {
+    "objectID": "slides/syllabus.html#prepare-you-for-the-consulting-practicum-stat-551",
+    "href": "slides/syllabus.html#prepare-you-for-the-consulting-practicum-stat-551",
+    "title": "Introduction and Second half pivot",
+    "section": "1. Prepare you for the consulting practicum (Stat 551)",
+    "text": "1. Prepare you for the consulting practicum (Stat 551)\n\nunderstand how the data was collected\nimplications of the collection process for analysis\norganize data for analysis\ndetermine appropriate methods for analysis that answer’s the client’s questions\ninterpret the results\npresent and communicate the results\n\n\n\nIn most courses you get nice clean data. Getting to “nice clean data” is non-trivial\nIn most courses things are “IID”, negligible missingness\nUsually, the question is formed in statistical langauge, here, you are responsible for “translating”\nInterpretation has to be “translated back”\nPresentation skills — important everywhere"
+  },
+  {
+    "objectID": "slides/syllabus.html#some-skills-youll-need",
+    "href": "slides/syllabus.html#some-skills-youll-need",
+    "title": "Introduction and Second half pivot",
+    "section": "2. Some skills you’ll need",
+    "text": "2. Some skills you’ll need\n\nVersion control\nReproducible reports\nWriting experience: genre is important\nPresentation skills\nBetter coding practice\nDocumentation"
+  },
+  {
+    "objectID": "slides/syllabus.html#computing",
+    "href": "slides/syllabus.html#computing",
+    "title": "Introduction and Second half pivot",
+    "section": "Computing",
+    "text": "Computing\n\nAll work done in R/RMarkdown.\nNo you can’t use Python. Or Stata or SPSS.\nNo you can’t use Jupyter Notebooks.\nAll materials on Github.\nYou will learn to use Git/GitHub/RStudio/Rmarkdown.\nSlack for discussion/communication"
+  },
+  {
+    "objectID": "slides/syllabus.html#getting-setup",
+    "href": "slides/syllabus.html#getting-setup",
+    "title": "Introduction and Second half pivot",
+    "section": "Getting setup",
+    "text": "Getting setup\n\nAdd to Slack Channel: https://ubc-stat.slack.com/archives/C04QUDNJG9X\nGithub account: https://github.com/\nAdd to the Github Org — tell me your account\nRStudio synchronization"
   }
 ]
