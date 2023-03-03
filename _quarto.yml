@@ -4,9 +4,9 @@ project:
     - index.qmd
     - slides/*.qmd
     - "!slides/*.rmd"
-
+execute:
+  freeze: auto
 editor: source
-
 website:
   title: "UBC Stat550 2023"
   page-footer:
