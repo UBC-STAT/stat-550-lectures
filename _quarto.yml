@@ -4,17 +4,20 @@ project:
     - index.qmd
     - slides/*.qmd
     - "!slides/*.rmd"
+  resources:
+    - assets/
+    - slides/themer.scss
 execute:
   freeze: auto
 editor: source
 website:
-  title: "UBC Stat550 2023"
+  title: "UBC Stat550"
   page-footer:
     background: primary
     center: "This work by [Daniel J. McDonald](https://dajmcdon.github.io) is licensed under [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0)<img style='height:22px!important;margin-left:3px;vertical-align:text-bottom;' src='https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1'><img style='height:22px!important;margin-left:3px;vertical-align:text-bottom;' src='https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1' /><img style='height:22px!important;margin-left:3px;vertical-align:text-bottom;' src='https://mirrors.creativecommons.org/presskit/icons/nc.svg?ref=chooser-v1' />"
   navbar:
     pinned: true
-    title: "<i class='bi bi-clipboard2-data'></i> UBC Stat550 2023"
+    title: "<i class='bi bi-clipboard2-data'></i> UBC Stat550"
     logo-href: https://ubc-stat.github.io/stat-550/
     right:
       - text: Syllabus
@@ -26,5 +29,10 @@ website:
       - text: Presentations
         url: https://ubc-stat.github.io/stat-550/presentations.html
       - text: Github
-        url: https://github.com/stat550-2023
+        url: https://github.com/stat550-2022
         icon: github
+format:
+  html:
+    theme: [cosmo, assets/styles.scss]
+    css: styles.css
+    toc: true
