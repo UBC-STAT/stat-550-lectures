@@ -2,22 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://github.com/UBC-STAT/stat-550-lectures/index.html</loc>
-    <lastmod>2023-03-03T05:15:59.446Z</lastmod>
+    <lastmod>2023-03-20T22:26:59.283Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/UBC-STAT/stat-550-lectures/slides/git.html</loc>
-    <lastmod>2023-03-03T05:16:01.666Z</lastmod>
+    <lastmod>2023-03-20T22:27:02.360Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/UBC-STAT/stat-550-lectures/slides/organization.html</loc>
-    <lastmod>2023-03-03T05:16:03.554Z</lastmod>
+    <lastmod>2023-03-20T22:27:04.128Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/UBC-STAT/stat-550-lectures/slides/presentations.html</loc>
-    <lastmod>2023-03-03T05:16:04.242Z</lastmod>
+    <lastmod>2023-03-20T22:27:04.724Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/UBC-STAT/stat-550-lectures/slides/syllabus.html</loc>
-    <lastmod>2023-03-03T05:16:04.762Z</lastmod>
+    <lastmod>2023-03-20T22:27:05.132Z</lastmod>
+  </url>
+  <url>
+    <loc>https://github.com/UBC-STAT/stat-550-lectures/slides/unit-tests.html</loc>
+    <lastmod>2023-03-20T22:27:06.008Z</lastmod>
   </url>
 </urlset>
