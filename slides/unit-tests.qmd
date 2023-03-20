@@ -1,0 +1,501 @@
+---
+title: "Unit tests"
+format: revealjs
+knitr: 
+  opts_chunk: 
+    cache: true
+---
+
+## I urge you to consult:
+
+[Carnegie Mellon's 36-750 Notes](https://36-750.github.io)
+
+Thank you Alex and Chris for the heavy lifting.
+
+
+```{r setup, include=FALSE}
+source("qmd-config.R")
+```
+
+## Bugs happen. All. The. Time.
+
+* the crash of the [Mars Climate Orbiter](https://en.wikipedia.org/wiki/Mars%5FClimate%5FOrbiter) (1998),
+
+* a [failure of the national telephone network](https://telephoneworld.org/landline-telephone-history/the-crash-of-the-att-network-in-1990/) (1990),
+
+* a deadly medical device ([1985](https://en.wikipedia.org/wiki/Therac-25), 2000),
+
+* a massive [Northeastern blackout](https://en.wikipedia.org/wiki/Northeast%5Fblackout%5Fof%5F2003) (2003),
+
+* the [Heartbleed](http://heartbleed.com/), [Goto Fail](https://www.dwheeler.com/essays/apple-goto-fail.html), [Shellshock](https://en.wikipedia.org/wiki/Shellshock%5F(software%5Fbug)) exploits (2012–2014),
+
+* a 15-year-old [fMRI analysis software](http://www.pnas.org/content/113/28/7900.full) bug that inflated significance levels (2015),
+
+. . .
+
+It is easy to write lots of code.
+
+But are we sure it's doing the right things?
+
+::: {.callout-important}
+Effective testing tries to help.
+:::
+
+
+## A Common (Interactive) Workflow
+
+1. Write a function.
+1. Try some reasonable values at the REPL to check that it works.
+1. If there are problems, maybe insert some print statements, and modify the function.
+1. Repeat until things seem fine.
+
+(REPL == Read-Eval-Print-Loop, the console, or Jupyter NB)
+
+* This tends to result in lots of bugs.
+
+* Later on, you forget which values you tried, whether they failed, how you fixed them.
+
+* So you make a change and maybe or maybe not try some again.
+
+
+## Example:
+
+```{r norms, echo=TRUE}
+two_norm <- function(x) sum(x^2)
+grouped_two_norm <- function(x, gr) as.vector(tapply(x, gr, two_norm))
+gr_two_norm <- function(x, gr) sum(grouped_two_norm(x, gr))
+```
+
+* There's a silly bug in the above code. 
+
+. . .
+
+* At one point, I decided that I didn't want the $\ell_2$-norm, I wanted the **squared** $\ell_2$ norm.
+
+* But now the other two functions are wrong.
+
+
+::: {.callout-note}
+These functions get used in many other places.
+
+To make sure I don't do something dumb ever again, I write [unit tests]{.primary}.
+:::
+
+
+## Unit Testing
+
+* A **unit** is a small bit of code (function, class, module, group of classes)
+
+* A **test** calls the unit with a set of inputs, and checks if we get the expected output.
+
+```{r, eval=FALSE, echo=TRUE}
+test_that("group norms are correct", {
+  asparse <- .05
+  gr <- c(1, 1, 1, 1, 2, 2, 3, 3, 3, 3, 3)
+  x <- -5:5
+  expect_equal(two_norm(c(-5 , 5)), sqrt(50)) # this one will fail
+  expect_equal(
+    grouped_two_norm(x, gr),
+    c(two_norm(x[1:4]), two_norm(x[5:6]), two_norm(x[7:11])))
+})
+```
+
+Unit testing consists of writing tests that are
+
+* focused on a small, low-level piece of code (a unit)
+* typically written by the programmer with standard tools
+* fast to run (so can be run often, i.e. before every commit).
+
+
+## Unit testing benefits
+
+Among others:
+
+* Exposing problems early
+* Making it easy to change (refactor) code without forgetting pieces or breaking things
+* Simplifying integration of components
+* Providing natural documentation of what the code should do
+* Driving the design of new code.
+
+![](http://www.phdcomics.com/comics/archive/phd033114s.gif)
+
+
+## Components of a Unit Testing Framework
+
+:::: {.columns}
+::: {.column width="50%"}
+
+* Collection of **Assertions** executed in sequence. 
+* Executed in a self-contained environment.
+* Any assertion fails `r fontawesome::fa("long-arrow-alt-right", secondary)` Test fails.
+
+Each test focuses on a single component.
+
+Named so that you know what it's doing.
+
+
+```{r, eval=FALSE}
+## See https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
+test_that("Conway's rules are correct", {
+    # conway_rules(num_neighbors, alive?)
+    expect_true(conway_rules(3, FALSE))
+    expect_false(conway_rules(4, FALSE))
+    expect_true(conway_rules(2, TRUE))
+    ...
+})
+```
+:::
+
+::: {.column width="50%"}
+
+![](https://upload.wikimedia.org/wikipedia/commons/e/e5/Gospers_glider_gun.gif)
+
+:::
+::::
+
+
+## A test suite
+
+:::: {.columns}
+::: {.column width="50%"}
+* Collection of related tests in a common context.
+
+* Prepares the environment, cleans up after
+
+* (loads some data, connects to database, necessary library,...)
+
+* Test suites are run and the results reported, particularly failures, in a easy to parse and economical style. 
+
+* For example, Python’s `{unittest}` can report like this
+::: 
+
+::: {.column width="50%"}
+
+```
+$ python test/trees_test.py -v
+
+test_crime_counts (__main__.DataTreeTest)
+Ensure Ks are consistent with num_points. ... ok
+test_indices_sorted (__main__.DataTreeTest)
+Ensure all node indices are sorted in increasing order. ... ok
+test_no_bbox_overlap (__main__.DataTreeTest)
+Check that child bounding boxes do not overlap. ... ok
+test_node_counts (__main__.DataTreeTest)
+Ensure that each node's point count is accurate. ... ok
+test_oversized_leaf (__main__.DataTreeTest)
+Don't recurse infinitely on duplicate points. ... ok
+test_split_parity (__main__.DataTreeTest)
+Check that each tree level has the right split axis. ... ok
+test_trange_contained (__main__.DataTreeTest)
+Check that child tranges are contained in parent tranges. ... ok
+test_no_bbox_overlap (__main__.QueryTreeTest)
+Check that child bounding boxes do not overlap. ... ok
+test_node_counts (__main__.QueryTreeTest)
+Ensure that each node's point count is accurate. ... ok
+test_oversized_leaf (__main__.QueryTreeTest)
+Don't recurse infinitely on duplicate points. ... ok
+test_split_parity (__main__.QueryTreeTest)
+Check that each tree level has the right split axis. ... ok
+test_trange_contained (__main__.QueryTreeTest)
+Check that child tranges are contained in parent tranges. ... ok
+
+---------------------------------------------------------
+Ran 12 tests in 23.932s
+```
+
+:::
+::::
+
+
+
+## `R` example
+
+```
+ℹ Loading sparsegl
+ℹ Testing sparsegl
+✓ | F W S  OK | Context
+✓ |         7 | model_base                                                           
+✓ |         7 | norms                                                                
+⠏ |         0 | predict                                         
+Loading required package: Matrix
+Loaded glmnet 4.1-3
+✓ |        17 | predict [0.4s]                                                       
+✓ |         5 | risk_estimation [0.4s]                                               
+✓ |         5 | sparsegl_comparisons                                                 
+✓ |        18 | sparsegl_params                                                      
+
+══ Results ══════════════════════════════════════════════════════════════════════════
+Duration: 0.9 s
+
+[ FAIL 0 | WARN 0 | SKIP 0 | PASS 59 ]
+```
+
+
+## What do I test?
+
+::: {.callout-tip icon=false}
+## Core Principle:
+
+Tests should be passed by a correct function, but not by an incorrect function.
+:::
+
+The tests must apply pressure to know if things break.
+
+* several specific inputs for which you _know_ the correct answer
+* "edge" cases, like a list of size zero or a matrix instead of a vector
+* special cases that the function must handle, but which you might forget about months from now
+* error cases that should throw an error instead of returning an invalid answer
+* previous bugs you’ve fixed, so those bugs never return.
+
+
+## What do I test?
+
+Make sure that incorrect functions won't pass (or at least, won't pass them all).
+
+```{r, eval=FALSE, echo=TRUE}
+add <- function(a, b) return(4)
+add <- function(a, b) return(a * b)
+
+test_that("Addition is commutative", {
+  expect_equal(add(1, 3), add(3, 1)) # both pass this !!
+  expect_equal(add(2, 5), add(5, 2)) # neither passes this
+})
+```
+
+::: {.callout-tip}
+* Cover all branches. 
+
+* Make sure there aren't branches you don't expect.
+:::
+
+
+## Test-driven development
+
+Test Driven Development (TDD) uses a short development cycle for each new feature or component:
+
+1. Write tests that specify the component’s desired behavior.   
+    The tests will initially fail because the component does not yet exist.
+
+1. Create the minimal implementation that passes the test.
+
+1. Refactor the code to meet design standards, running the tests with each change to ensure correctness.
+
+##
+
+#### Why work this way?
+
+* Writing the tests may help you realize  
+    a. what arguments the function must take,   
+    b. what other data it needs,   
+    c. and what kinds of errors it needs to handle. 
+
+* The tests define a specific plan for what the function must do.
+
+* You will catch bugs at the beginning instead of at the end (or never).
+
+* Testing is part of design, instead of a lame afterthought you dread doing.
+
+
+## Rules of thumb
+
+[Keep tests in separate files]{.secondary} 
+
+from the code they test. This makes it easy to run them separately.
+
+[Give tests names.]{.secondary} 
+
+Testing frameworks usually let you give the test functions names or descriptions. `test_1` doesn’t help you at all, but `test_tree_insert` makes it easy for you to remember what the test is for.
+
+[Make tests replicable.]{.secondary} 
+
+If a test involves random data, what do you do when the test fails? You need some way to know what random values it used so you can figure out why the test fails.
+
+## Rules of thumb
+
+[Use tests instead of the REPL.]{.secondary} 
+
+If you’re building a complicated function, write the tests in advance and use them to help you while you write the function. You'll waste time calling over and over at the REPL.
+
+[Avoid testing against another's code/package.]{.secondary} 
+
+You don't know the ins and outs of what they do. If they change the code, your tests will fail.
+
+[Test Units, not main functions.]{.secondary} 
+
+You should write small functions that do one thing. Test those. Don't write one huge 1000-line function and try to test that.
+
+[Avoid random numbers.]{.secondary} 
+
+Seeds are not always portable.
+
+---
+
+::: {.callout-note}
+* `R`, use `{testthat}`. See the [Testing](http://r-pkgs.had.co.nz/tests.html) chapter from Hadley Wickham’s R Packages book.
+
+* `python` use `{pytest}`. A bit more user-friendly: [pytest](https://docs.pytest.org/en/latest/)
+:::
+
+
+## Assertions
+
+[Assertions]{.secondary} are things that must be true. Failure means "Quit". 
+
+- There's no way to recover. 
+- Think: passed in bad arguments.
+    
+```{python}
+#| eval: false
+#| echo: true
+def fit(data, ...):
+
+    for it in range(max_iterations):
+        # iterative fitting code here
+        ...
+
+        # Plausibility check
+        assert np.all(alpha >= 0), "negative alpha"
+        assert np.all(theta >= 0), "negative theta"
+        assert omega > 0, "Nonpositive omega"
+        assert eta2 > 0, "Nonpositive eta2"
+        assert sigma2 > 0, "Nonpositive sigma2"
+
+    ...
+
+```
+
+The parameters have to be positive. Negative is impossible. No way to recover.
+
+
+## Errors
+
+[Errors]{.secondary} are for unexpected conditions that _could_ be handled by the calling code.
+
+* You could perform some action to work around the error, fix it, or report it to the user.
+
+#### Example:
+
+- I give you directions to my house. You get lost. You could recover.
+- Maybe retrace your steps, see if you missed a sign post.
+- Maybe search on Google Maps to locate your self in relation to a landmark.
+- If those fail, message me.
+- If I don't respond, get an Uber.
+- Finally, give up and go home.
+
+## Errors
+
+Code can also do this. It can `try` the function and `catch` errors to recover automatically.
+
+For example:
+
+* Load some data from the internet. If the file doesn't exist, create some.
+
+* Run some iterative algorithm. If we haven't converged, restart from another place.
+
+Code can fix errors without user input. It can't fix assertions.
+
+
+## Best practices
+
+:::: {.columns}
+::: {.column width="50%"}
+[Do this]{.secondary}
+
+```{r eval=FALSE, echo=TRUE}
+foo <- function(x) {
+  if (x < 0) stop(x, " is not positive")
+}
+
+foo <- function(x) {
+  if (x < 0) message(x, " is not positive")
+  # not useful unless we fix it too...
+}
+
+foo <- function(x) {
+  if (x < 0) warning(x, " is not positive")
+  # not useful unless we fix it too...
+}
+
+foo <- function(x) {
+  if (length(x) == 0)
+    rlang::abort("no data", class="no_input_data")
+}
+```
+
+These allow error handling.
+:::
+
+
+::: {.column width="50%"}
+
+[Don't do this]{.secondary}
+
+```{r eval=FALSE, echo=TRUE}
+foo <- function(x) {
+  if (x < 0) {
+    print(paste0(x, " is not positive"))
+    return(NULL)
+  }
+  ...
+}
+
+foo <- function(x) {
+  if (x < 0) cat("uh oh.")
+  ...
+}
+```
+
+Can't recover.
+
+Don't know what went wrong.
+
+:::
+::::
+
+---
+
+See [here](https://36-750.github.io/practices/errors-exceptions/) for more details.
+
+Seems like overkill, 
+
+but when you run a big simulation that takes 2 weeks, 
+
+you don't want it to die after 10 days.   
+
+
+You want it to recover.
+
+
+## Practice
+
+#### Gradient ascent.
+
+* Suppose we want to find $\max_x f(x)$.
+
+* We repeat the update $x \leftarrow x + \gamma f'(x)$ until convergence, for some $\gamma > 0$.
+
+#### Poisson likelihood.
+
+* Recall the likelihood: $L(\lambda; y_1,\ldots,y_n) = \prod_{i=1}^n \frac{\lambda^{y_i} \exp(-\lambda)}{y_i!}$
+
+[Goal:]{.secondary} find the MLE for $\lambda$ using gradient ascent
+
+---
+
+## Deliverables, 2 R scripts
+
+1. A function that evaluates the log likelihood. (think about sufficiency, ignorable constants)
+1. A function that evaluates the gradient of the log likelihood. 
+1. A function that *does* the optimization. 
+    a. Should take in data, the log likelihood and the gradient.
+    b. Use the loglikelihood to determine convergence. 
+    c. Pass in any other necessary parameters with reasonable defaults.
+1. A collection of tests that make sure your functions work.
+
+
+$$
+\begin{aligned} 
+L(\lambda; y_1,\ldots,y_n) &= \prod_{i=1}^n \frac{\lambda^{y_i} \exp(-\lambda)}{y_i!}\\
+x &\leftarrow x + \gamma f'(x)
+\end{aligned}
+$$
