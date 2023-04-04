@@ -10,7 +10,7 @@
   <meta name="generator" content="quarto-1.2.475">
 
   <meta name="author" content=" STAT 550    Daniel J. McDonald ">
-  <title>UBC Stat550 - Introduction and Second half pivot</title>
+  <title>UBC Stat550 - The bootstrap</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -28,6 +28,70 @@
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto.css" id="theme">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
@@ -324,7 +388,7 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Introduction and Second half pivot</h1>
+  <h1 class="title">The bootstrap</h1>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -335,161 +399,282 @@
 </div>
 
 </section>
-<section id="about-me" class="slide level2">
-<h2>About me</h2>
+<section id="section" class="slide level2" data-background-image="https://www.azquotes.com/picture-quotes/quote-i-believe-in-pulling-yourself-up-by-your-own-bootstraps-i-believe-it-is-possible-i-saw-stephen-colbert-62-38-03.jpg" data-background-size="contain">
+<h2></h2>
+<p><span class="math display">\[\newcommand{\Expect}[1]{E\left[ #1 \right]}
+\newcommand{\Var}[1]{\mathrm{Var}\left[ #1 \right]}
+\newcommand{\Cov}[2]{\mathrm{Cov}\left[#1,\ #2\right]}
+\newcommand{\given}{\ \vert\ }
+\newcommand{\argmin}{\arg\min}
+\newcommand{\argmax}{\arg\max}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\P}{Pr}
+\renewcommand{\hat}{\widehat}
+\newcommand{\tr}[1]{\mbox{tr}(#1)}
+\newcommand{\X}{\mathbf{X}}
+\newcommand{\y}{\mathbf{y}}\]</span></p>
+</section>
+<section id="section-1" class="slide level2" data-background-image="http://rackjite.com/wp-content/uploads/rr11014aa.jpg" data-background-size="contain">
+<h2></h2>
+</section>
+<section id="in-statistics" class="slide level2">
+<h2>In statistics…</h2>
+<p>The “bootstrap” works. And well.</p>
+<p>It’s good for “second-level” analysis.</p>
+<ul>
+<li><p>“First-level” analyses are things like <span class="math inline">\(\hat\beta\)</span>, <span class="math inline">\(\hat y\)</span>, an estimator of the center (a median), etc.</p></li>
+<li><p>“Second-level” are things like <span class="math inline">\(\Var{\hat\beta}\)</span>, a confidence interval for <span class="math inline">\(\hat y\)</span>, or a median, etc.</p></li>
+</ul>
+<p>You usually get these “second-level” properties from “the sampling distribution of an estimator”</p>
+<div class="fragment">
+<p>But what if you don’t know the sampling distribution? Or you’re skeptical of the CLT argument?</p>
+</div>
+</section>
+<section id="refresher-on-sampling-distributions" class="slide level2">
+<h2>Refresher on sampling distributions</h2>
+<ol type="1">
+<li>If <span class="math inline">\(X_i\)</span> are iid Normal <span class="math inline">\((0,\sigma^2)\)</span>, then <span class="math inline">\(\Var{\bar{X}} = \sigma^2 / n\)</span>.</li>
+<li>If <span class="math inline">\(X_i\)</span> are iid and <span class="math inline">\(n\)</span> is big, then <span class="math inline">\(\Var{\bar{X}} \approx \Var{X_1} / n\)</span>.</li>
+<li>If <span class="math inline">\(X_i\)</span> are iid Binomial <span class="math inline">\((m, p)\)</span>, then <span class="math inline">\(\Var{\bar{X}} = mp(1-p) / n\)</span></li>
+</ol>
+</section>
+<section id="example-of-unknown-sampling-distribution" class="slide level2">
+<h2>Example of unknown sampling distribution</h2>
+<p>I estimate a LDA on some data.</p>
+<p>I get a new <span class="math inline">\(x_0\)</span> and produce <span class="math inline">\(\hat{Pr}(y_0 =1 \given x_0)\)</span>.</p>
+<p>Can I get a 95% confidence interval for <span class="math inline">\(Pr(y_0=1 \given x_0)\)</span>?</p>
+<div class="fragment">
+<p>The bootstrap gives this to you.</p>
+</div>
+</section>
+<section id="procedure" class="slide level2">
+<h2>Procedure</h2>
+<ol type="1">
+<li>Resample your training data w/ replacement.</li>
+<li>Calculate a LDA on this sample.</li>
+<li>Produce a new prediction, call it <span class="math inline">\(\widehat{Pr}_b(y_0 =1 \given x_0)\)</span>.</li>
+<li>Repeat 1-3 <span class="math inline">\(b = 1,\ldots,B\)</span> times.</li>
+<li>CI: <span class="math inline">\(\left[2\widehat{Pr}(y_0 =1 \given x_0) - \widehat{F}_{boot}(1-\alpha/2),\ 2\widehat{Pr}(y_0 =1 \given x_0) - \widehat{F}_{boot}(\alpha/2)\right]\)</span></li>
+</ol>
+<p><span class="math inline">\(\hat{F}\)</span> is the “empirical” distribution of the bootstraps.</p>
+</section>
+<section id="very-basic-example" class="slide level2">
+<h2>Very basic example</h2>
+<ul>
+<li><p>Let <span class="math inline">\(X_i\sim Exponential(1/5)\)</span>. The pdf is <span class="math inline">\(f(x) = \frac{1}{5}e^{-x/5}\)</span></p></li>
+<li><p>I know if I estimate the mean with <span class="math inline">\(\bar{X}\)</span>, then by the CLT (if <span class="math inline">\(n\)</span> is big),</p></li>
+</ul>
+<p><span class="math display">\[\frac{\sqrt{n}(\bar{X}-E[X])}{s} \approx N(0, 1).\]</span></p>
+<ul>
+<li><p>This gives me a 95% confidence interval like <span class="math display">\[\bar{X} \pm 2 \frac{s}{\sqrt{n}}\]</span></p></li>
+<li><p>But I don’t want to estimate the mean, I want to estimate the median.</p></li>
+</ul>
+</section>
+<section class="slide level2">
+
+
+<img data-src="bootstrap_files/figure-revealjs/unnamed-chunk-1-1.png" width="960" class="r-stretch quarto-figure-center"></section>
+<section id="now-what" class="slide level2">
+<h2>Now what</h2>
+<div class="cell" data-hash="bootstrap_cache/revealjs/unnamed-chunk-2_28a93369c88c5cfc0c8cfc72fc21e7b0">
+
+</div>
+<ul>
+<li><p>I give you a sample of size 500, you give me the sample median.</p></li>
+<li><p>How do you get a CI?</p></li>
+<li><p>You can use the bootstrap!</p></li>
+</ul>
+<div class="cell" data-layout-align="center" data-hash="bootstrap_cache/revealjs/unnamed-chunk-3_39b7918e2e87ddbf122fc8f75621faa9">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">set.seed</span>(<span class="dv">2022-11-01</span>)</span>
+<span id="cb1-2"><a href="#cb1-2"></a>x <span class="ot">&lt;-</span> <span class="fu">rexp</span>(n, <span class="dv">1</span> <span class="sc">/</span> <span class="dv">5</span>)</span>
+<span id="cb1-3"><a href="#cb1-3"></a>(med <span class="ot">&lt;-</span> <span class="fu">median</span>(x)) <span class="co"># sample median</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.669627</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>B <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a>bootMed <span class="ot">&lt;-</span> <span class="cf">function</span>() <span class="fu">median</span>(<span class="fu">sample</span>(x, <span class="at">replace =</span> <span class="cn">TRUE</span>)) <span class="co"># resample, and get the median</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a>Fhat <span class="ot">&lt;-</span> <span class="fu">replicate</span>(B, <span class="fu">bootMed</span>()) <span class="co"># repeat B times, "empirical distribution"</span></span>
+<span id="cb3-5"><a href="#cb3-5"></a>CI <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> med <span class="sc">-</span> <span class="fu">quantile</span>(Fhat, <span class="at">probs =</span> <span class="fu">c</span>(<span class="dv">1</span> <span class="sc">-</span> alpha <span class="sc">/</span> <span class="dv">2</span>, alpha <span class="sc">/</span> <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="bootstrap_files/figure-revealjs/unnamed-chunk-4-1.png" width="960" class="r-stretch quarto-figure-center"></section>
+<section id="section-2" class="slide level2" data-background-image="gfx/boot1.png" data-background-size="contain">
+<h2></h2>
+</section>
+<section id="section-3" class="slide level2" data-background-image="gfx/boot2.png" data-background-size="contain">
+<h2></h2>
+</section>
+<section id="slightly-harder-example" class="slide level2">
+<h2>Slightly harder example</h2>
+<div class="cell" data-hash="bootstrap_cache/revealjs/unnamed-chunk-5_d1a63967624a111d653bb1a839462d6a">
+
+</div>
 <div class="columns">
 <div class="column" style="width:50%;">
-<ul>
-<li>Daniel J. McDonald</li>
-<li>daniel@stat.ubc.ca</li>
-<li><a href="http://dajmcdon.github.io" class="uri">http://dajmcdon.github.io</a></li>
-<li>Associate Professor, Department of Statistics</li>
-</ul>
-</div><div class="column" style="width:50%;">
-<ul>
-<li>Moved to UBC in mid-March 2020, 2 days before the border closed</li>
-<li>Previously a Stats Prof at Indiana University for 8 years</li>
-</ul>
-</div>
-</div>
-<div class="fragment">
+<div class="cell" data-layout-align="center" data-hash="bootstrap_cache/revealjs/unnamed-chunk-6_7479e035cc33cbc4c30fe55486fe21f3">
+<div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="https://weareiu.com/wp-content/uploads/2018/12/map-1.png" style="width:50.0%"></p>
+<p><img data-src="bootstrap_files/figure-revealjs/unnamed-chunk-6-1.png" width="768"></p>
 </figure>
 </div>
 </div>
+</div>
+</div><div class="column" style="width:50%;">
+<div class="cell" data-hash="bootstrap_cache/revealjs/unnamed-chunk-7_a66691077263e483ed60e6263b04e739">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Hwt ~ 0 + Bwt, data = fatcats)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-6.9293 -1.0460 -0.1407  0.8298 16.2536 
+
+Coefficients:
+    Estimate Std. Error t value Pr(&gt;|t|)    
+Bwt  3.81895    0.07678   49.74   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 2.549 on 143 degrees of freedom
+Multiple R-squared:  0.9454,    Adjusted R-squared:  0.945 
+F-statistic:  2474 on 1 and 143 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       2.5 %  97.5 %
+Bwt 3.667178 3.97073</code></pre>
+</div>
+</div>
+</div>
+</div>
 </section>
-<section id="no-more-canvas" class="slide level2">
-<h2>No More Canvas!!</h2>
-<p>See the website:</p>
-<p><a href="https://ubc-stat.github.io/stat-550/" class="uri">https://ubc-stat.github.io/stat-550/</a></p>
-<br>
-<hr>
-<p><br></p>
-<p>You’ll find</p>
-<ul>
-<li>announcements</li>
-<li>schedule</li>
-<li>lecture slides / notes</li>
-</ul>
-<p>(Grades still on Canvas)</p>
-</section>
-<section id="course-communication" class="slide level2">
-<h2>Course communication</h2>
+<section id="when-we-fit-models-we-examine-diagnostics" class="slide level2">
+<h2>When we fit models, we examine diagnostics</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
-<h3 id="website">Website:</h3>
-<p><a href="https://ubc-stat.github.io/stat-550" class="uri">https://ubc-stat.github.io/stat-550</a></p>
-<ul>
-<li><p>Hosted on GitHub.</p></li>
-<li><p>Links to slides and all materials</p></li>
-<li><p>Syllabus is there. Be sure to read it. (same idea as before)</p></li>
-</ul>
-<h3 id="slack">Slack:</h3>
-<ul>
-<li><p>This is our discussion board.</p></li>
-<li><p>Note that this data is hosted on servers outside of Canada. You may wish to use a pseudonym to protect your privacy.</p></li>
-<li><p>We’ll use a Channel in the UBC-Stat Workspace</p></li>
-</ul>
+<div class="cell" data-layout-align="center" data-hash="bootstrap_cache/revealjs/unnamed-chunk-8_a26b32b9db772eefdfaade27953a3fa9">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="bootstrap_files/figure-revealjs/unnamed-chunk-8-1.png" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The tails are too fat, I don’t believe that CI…</p>
 </div><div class="column" style="width:50%;">
-<h3 id="github-organization">Github organization</h3>
-<ul>
-<li><p>Linked from the website.</p></li>
-<li><p>This is where you complete/submit assignments/projects/in-class-work</p></li>
-<li><p>This is also hosted on US servers <a href="https://github.com/Stat550-2022" class="uri">https://github.com/Stat550-2022</a></p></li>
-</ul>
+<p>We bootstrap</p>
+<div class="cell" data-hash="bootstrap_cache/revealjs/unnamed-chunk-9_93361f061cde1cc9bffa8989408b1588">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>B <span class="ot">&lt;-</span> <span class="dv">500</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a>bhats <span class="ot">&lt;-</span> <span class="fu">double</span>(B)</span>
+<span id="cb6-3"><a href="#cb6-3"></a>alpha <span class="ot">&lt;-</span> .<span class="dv">05</span></span>
+<span id="cb6-4"><a href="#cb6-4"></a><span class="cf">for</span> (b <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>B) {</span>
+<span id="cb6-5"><a href="#cb6-5"></a>  samp <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(fatcats), <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb6-6"><a href="#cb6-6"></a>  newcats <span class="ot">&lt;-</span> fatcats[samp, ] <span class="co"># new data</span></span>
+<span id="cb6-7"><a href="#cb6-7"></a>  bhats[b] <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">lm</span>(Hwt <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> Bwt, <span class="at">data =</span> newcats)) </span>
+<span id="cb6-8"><a href="#cb6-8"></a>}</span>
+<span id="cb6-9"><a href="#cb6-9"></a></span>
+<span id="cb6-10"><a href="#cb6-10"></a><span class="dv">2</span> <span class="sc">*</span> <span class="fu">coef</span>(cats.lm) <span class="sc">-</span> <span class="co"># Bootstrap CI</span></span>
+<span id="cb6-11"><a href="#cb6-11"></a>  <span class="fu">quantile</span>(bhats, <span class="at">probs =</span> <span class="fu">c</span>(<span class="dv">1</span> <span class="sc">-</span> alpha <span class="sc">/</span> <span class="dv">2</span>, alpha <span class="sc">/</span> <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   97.5%     2.5% 
+3.654977 3.955927 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="fu">confint</span>(cats.lm) <span class="co"># Original CI</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       2.5 %  97.5 %
+Bwt 3.667178 3.97073</code></pre>
+</div>
+</div>
 </div>
 </div>
 </section>
-<section id="why-these" class="slide level2">
-<h2>Why these?</h2>
-<ol type="1">
-<li>Yes, some data is hosted on servers in the US.</li>
-<li>But in the real world, no one uses Canvas/Piazza, so why not learn things they do use?</li>
-<li>Canvas is dumb and hard to organize.</li>
-<li>GitHub is free and actually useful.</li>
-<li>Much easier to communicate, “grade” or comment on your work</li>
-<li>Much more DS friendly</li>
-<li>Note that MDS uses both of these, the department uses both, etc.</li>
-<li>More on all this later.</li>
-</ol>
+<section id="an-alternative" class="slide level2">
+<h2>An alternative</h2>
+<ul>
+<li><p>So far, I didn’t use any information about the data-generating process.</p></li>
+<li><p>We’ve done the <span class="secondary">non-parametric bootstrap</span></p></li>
+<li><p>This is easiest, and most common for most cases.</p></li>
+</ul>
 <div class="fragment">
-<p>Slack help from MDS — <a href="https://ubc-mds.github.io/resources_pages/slack/">features</a> and <a href="https://ubc-mds.github.io/resources_pages/slack_asking_for_help/">rules</a></p>
+<p><span class="secondary">But there’s another version</span></p>
+<ul>
+<li><p>You could try a “parametric bootstrap”</p></li>
+<li><p>This assumes knowledge about the DGP</p></li>
+</ul>
 </div>
 </section>
-<section id="what-are-the-goals-of-stat-550" class="slide level2">
-<h2>What are the goals of Stat 550?</h2>
-<p><br></p>
-<h3 id="prepare-you-to-do-the-consulting-practicum-stat-551">1. Prepare you to do the consulting practicum (Stat 551)</h3>
-<p><br><br></p>
-<h3 id="youre-a-captive-audience-so-i-can-teach-you-some-skills-youll-need-for">2. You’re a captive audience, so I can teach you some skills you’ll need for</h3>
-<ul>
-<li>MSc Thesis/Project or PhD research</li>
-<li>Employment in Data Science / Statistics.</li>
-<li>These are often things that will help with the first as well</li>
-</ul>
-</section>
-<section id="prepare-you-for-the-consulting-practicum-stat-551" class="slide level2">
-<h2>1. Prepare you for the consulting practicum (Stat 551)</h2>
-<ul>
-<li><p>understand how the data was collected</p></li>
-<li><p>implications of the collection process for analysis</p></li>
-<li><p>organize data for analysis</p></li>
-<li><p>determine appropriate methods for analysis that <span class="secondary">answer’s the client’s questions</span></p></li>
-<li><p>interpret the results</p></li>
-<li><p>present and communicate the results</p></li>
-</ul>
-<aside class="notes">
-<ul>
-<li>In most courses you get nice clean data. Getting to “nice clean data” is non-trivial</li>
-<li>In most courses things are “IID”, negligible missingness</li>
-<li>Usually, the question is formed in statistical langauge, here, you are responsible for “translating”</li>
-<li>Interpretation has to be “translated back”</li>
-<li>Presentation skills — important everywhere</li>
-</ul>
-<style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
-      }</style></aside>
-</section>
-<section id="some-skills-youll-need" class="slide level2">
-<h2>2. Some skills you’ll need</h2>
-<ul>
-<li>Version control</li>
-<li>Reproducible reports</li>
-<li>Writing experience: genre is important</li>
-<li>Presentation skills</li>
-<li>Better coding practice</li>
-<li>Documentation</li>
-</ul>
-</section>
-<section id="computing" class="slide level2">
-<h2>Computing</h2>
-<ul>
-<li>All work done in R/RMarkdown.</li>
-<li>No you can’t use Python. Or Stata or SPSS.</li>
-<li>No you can’t use Jupyter Notebooks.</li>
-<li>All materials on Github.</li>
-<li>You will learn to use Git/GitHub/RStudio/Rmarkdown.</li>
-<li>Slack for discussion/communication</li>
-</ul>
-</section>
-<section id="getting-setup" class="slide level2">
-<h2>Getting setup</h2>
+<section id="same-data" class="slide level2">
+<h2>Same data</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><span class="secondary">Non-parametric bootstrap</span></p>
+<p>Same as before</p>
+<div class="cell" data-hash="bootstrap_cache/revealjs/unnamed-chunk-10_f2de56b607cee378e1507075b492fd43">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>B <span class="ot">&lt;-</span> <span class="dv">500</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a>bhats <span class="ot">&lt;-</span> <span class="fu">double</span>(B)</span>
+<span id="cb10-3"><a href="#cb10-3"></a>alpha <span class="ot">&lt;-</span> .<span class="dv">05</span></span>
+<span id="cb10-4"><a href="#cb10-4"></a><span class="cf">for</span> (b <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>B) {</span>
+<span id="cb10-5"><a href="#cb10-5"></a>  samp <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(fatcats), <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb10-6"><a href="#cb10-6"></a>  newcats <span class="ot">&lt;-</span> fatcats[samp, ] <span class="co"># new data</span></span>
+<span id="cb10-7"><a href="#cb10-7"></a>  bhats[b] <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">lm</span>(Hwt <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> Bwt, <span class="at">data =</span> newcats)) </span>
+<span id="cb10-8"><a href="#cb10-8"></a>}</span>
+<span id="cb10-9"><a href="#cb10-9"></a></span>
+<span id="cb10-10"><a href="#cb10-10"></a><span class="dv">2</span> <span class="sc">*</span> <span class="fu">coef</span>(cats.lm) <span class="sc">-</span> <span class="co"># NP Bootstrap CI</span></span>
+<span id="cb10-11"><a href="#cb10-11"></a>  <span class="fu">quantile</span>(bhats, <span class="at">probs =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">-</span>alpha<span class="sc">/</span><span class="dv">2</span>, alpha<span class="sc">/</span><span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   97.5%     2.5% 
+3.673559 3.970251 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="fu">confint</span>(cats.lm) <span class="co"># Original CI</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       2.5 %  97.5 %
+Bwt 3.667178 3.97073</code></pre>
+</div>
+</div>
+</div><div class="column" style="width:50%;">
+<p><span class="secondary">Parametric bootstrap</span></p>
 <ol type="1">
-<li>Add to Slack Channel: <a href="https://ubc-stat.slack.com/archives/C04QUDNJG9X" class="uri">https://ubc-stat.slack.com/archives/C04QUDNJG9X</a></li>
-<li>Github account: <a href="https://github.com/" class="uri">https://github.com/</a></li>
-<li>Add to the Github Org — tell me your account</li>
-<li>RStudio synchronization</li>
+<li>Assume that the linear model is TRUE.</li>
+<li>Then, <span class="math inline">\(\texttt{Hwt}_i = \widehat{\beta}\times \texttt{Bwt}_i + \widehat{e}_i\)</span>, <span class="math inline">\(\widehat{e}_i \approx \epsilon_i\)</span></li>
+<li>The <span class="math inline">\(\epsilon_i\)</span> is random <span class="math inline">\(\longrightarrow\)</span> just resample <span class="math inline">\(\widehat{e}_i\)</span>.</li>
 </ol>
+<div class="cell" data-hash="bootstrap_cache/revealjs/unnamed-chunk-11_0eee25ca81d684df9e3ba3f14d6d08f7">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>B <span class="ot">&lt;-</span> <span class="dv">500</span></span>
+<span id="cb14-2"><a href="#cb14-2"></a>bhats <span class="ot">&lt;-</span> <span class="fu">double</span>(B)</span>
+<span id="cb14-3"><a href="#cb14-3"></a>alpha <span class="ot">&lt;-</span> .<span class="dv">05</span></span>
+<span id="cb14-4"><a href="#cb14-4"></a>cats.lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(Hwt <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> Bwt, <span class="at">data =</span> fatcats)</span>
+<span id="cb14-5"><a href="#cb14-5"></a>newcats <span class="ot">&lt;-</span> fatcats</span>
+<span id="cb14-6"><a href="#cb14-6"></a><span class="cf">for</span> (b <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>B) {</span>
+<span id="cb14-7"><a href="#cb14-7"></a>  samp <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">residuals</span>(cats.lm), <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb14-8"><a href="#cb14-8"></a>  newcats<span class="sc">$</span>Hwt <span class="ot">&lt;-</span> <span class="fu">predict</span>(cats.lm) <span class="sc">+</span> samp <span class="co"># new data</span></span>
+<span id="cb14-9"><a href="#cb14-9"></a>  bhats[b] <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">lm</span>(Hwt <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> Bwt, <span class="at">data =</span> newcats)) </span>
+<span id="cb14-10"><a href="#cb14-10"></a>}</span>
+<span id="cb14-11"><a href="#cb14-11"></a></span>
+<span id="cb14-12"><a href="#cb14-12"></a><span class="dv">2</span> <span class="sc">*</span> <span class="fu">coef</span>(cats.lm) <span class="sc">-</span> <span class="co"># Parametric Bootstrap CI</span></span>
+<span id="cb14-13"><a href="#cb14-13"></a>  <span class="fu">quantile</span>(bhats, <span class="at">probs =</span> <span class="fu">c</span>(<span class="dv">1</span> <span class="sc">-</span> alpha<span class="sc">/</span><span class="dv">2</span>, alpha<span class="sc">/</span><span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   97.5%     2.5% 
+3.665531 3.961896 </code></pre>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="bootstrap-error-sources" class="slide level2">
+<h2>Bootstrap error sources</h2>
+<p><span class="secondary">Simulation error</span>:</p>
+<p>using only <span class="math inline">\(B\)</span> samples to estimate <span class="math inline">\(F\)</span> with <span class="math inline">\(\hat{F}\)</span>.</p>
+<p><span class="secondary">Statistical error</span>:</p>
+<p>our data depended on a sample from the population. We don’t have the whole population so we make an error by using a sample</p>
+<p>(Note: this part is what <strong>always</strong> happens with data, and what the science of statistics analyzes.)</p>
+<p><span class="secondary">Specification error</span>:</p>
+<p>If we use the parametric bootstrap, and our model is wrong, then we are overconfident.</p>
 
 <div class="footer footer-default">
 

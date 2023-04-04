@@ -4,7 +4,91 @@
     "href": "index.html",
     "title": "Lecture slides",
     "section": "",
-    "text": "Syllabus and introduction\nGit and Github\nOrganization\nGiving talks\nUnit tests\nModel selection\nTesting non-nested models, contrasts, dummy variables, interpreting coefficients in non-Gaussian regression.\nRegularization and modern methods\nReading statistical papers  \nCluster computing"
+    "text": "Syllabus and introduction\nGit and Github\nOrganization\nGiving talks\nUnit tests\nBootstrap\nModel selection\nTesting non-nested models, contrasts, dummy variables, interpreting coefficients in non-Gaussian regression.\nRegularization and modern methods\nReading statistical papers  \nCluster computing"
+  },
+  {
+    "objectID": "slides/bootstrap.html#section",
+    "href": "slides/bootstrap.html#section",
+    "title": "The bootstrap",
+    "section": "",
+    "text": "\\[\\newcommand{\\Expect}[1]{E\\left[ #1 \\right]}\n\\newcommand{\\Var}[1]{\\mathrm{Var}\\left[ #1 \\right]}\n\\newcommand{\\Cov}[2]{\\mathrm{Cov}\\left[#1,\\ #2\\right]}\n\\newcommand{\\given}{\\ \\vert\\ }\n\\newcommand{\\argmin}{\\arg\\min}\n\\newcommand{\\argmax}{\\arg\\max}\n\\newcommand{\\R}{\\mathbb{R}}\n\\newcommand{\\P}{Pr}\n\\renewcommand{\\hat}{\\widehat}\n\\newcommand{\\tr}[1]{\\mbox{tr}(#1)}\n\\newcommand{\\X}{\\mathbf{X}}\n\\newcommand{\\y}{\\mathbf{y}}\\]"
+  },
+  {
+    "objectID": "slides/bootstrap.html#in-statistics",
+    "href": "slides/bootstrap.html#in-statistics",
+    "title": "The bootstrap",
+    "section": "In statistics…",
+    "text": "In statistics…\nThe “bootstrap” works. And well.\nIt’s good for “second-level” analysis.\n\n“First-level” analyses are things like \\(\\hat\\beta\\), \\(\\hat y\\), an estimator of the center (a median), etc.\n“Second-level” are things like \\(\\Var{\\hat\\beta}\\), a confidence interval for \\(\\hat y\\), or a median, etc.\n\nYou usually get these “second-level” properties from “the sampling distribution of an estimator”\n\nBut what if you don’t know the sampling distribution? Or you’re skeptical of the CLT argument?"
+  },
+  {
+    "objectID": "slides/bootstrap.html#refresher-on-sampling-distributions",
+    "href": "slides/bootstrap.html#refresher-on-sampling-distributions",
+    "title": "The bootstrap",
+    "section": "Refresher on sampling distributions",
+    "text": "Refresher on sampling distributions\n\nIf \\(X_i\\) are iid Normal \\((0,\\sigma^2)\\), then \\(\\Var{\\bar{X}} = \\sigma^2 / n\\).\nIf \\(X_i\\) are iid and \\(n\\) is big, then \\(\\Var{\\bar{X}} \\approx \\Var{X_1} / n\\).\nIf \\(X_i\\) are iid Binomial \\((m, p)\\), then \\(\\Var{\\bar{X}} = mp(1-p) / n\\)"
+  },
+  {
+    "objectID": "slides/bootstrap.html#example-of-unknown-sampling-distribution",
+    "href": "slides/bootstrap.html#example-of-unknown-sampling-distribution",
+    "title": "The bootstrap",
+    "section": "Example of unknown sampling distribution",
+    "text": "Example of unknown sampling distribution\nI estimate a LDA on some data.\nI get a new \\(x_0\\) and produce \\(\\hat{Pr}(y_0 =1 \\given x_0)\\).\nCan I get a 95% confidence interval for \\(Pr(y_0=1 \\given x_0)\\)?\n\nThe bootstrap gives this to you."
+  },
+  {
+    "objectID": "slides/bootstrap.html#procedure",
+    "href": "slides/bootstrap.html#procedure",
+    "title": "The bootstrap",
+    "section": "Procedure",
+    "text": "Procedure\n\nResample your training data w/ replacement.\nCalculate a LDA on this sample.\nProduce a new prediction, call it \\(\\widehat{Pr}_b(y_0 =1 \\given x_0)\\).\nRepeat 1-3 \\(b = 1,\\ldots,B\\) times.\nCI: \\(\\left[2\\widehat{Pr}(y_0 =1 \\given x_0) - \\widehat{F}_{boot}(1-\\alpha/2),\\ 2\\widehat{Pr}(y_0 =1 \\given x_0) - \\widehat{F}_{boot}(\\alpha/2)\\right]\\)\n\n\\(\\hat{F}\\) is the “empirical” distribution of the bootstraps."
+  },
+  {
+    "objectID": "slides/bootstrap.html#very-basic-example",
+    "href": "slides/bootstrap.html#very-basic-example",
+    "title": "The bootstrap",
+    "section": "Very basic example",
+    "text": "Very basic example\n\nLet \\(X_i\\sim Exponential(1/5)\\). The pdf is \\(f(x) = \\frac{1}{5}e^{-x/5}\\)\nI know if I estimate the mean with \\(\\bar{X}\\), then by the CLT (if \\(n\\) is big),\n\n\\[\\frac{\\sqrt{n}(\\bar{X}-E[X])}{s} \\approx N(0, 1).\\]\n\nThis gives me a 95% confidence interval like \\[\\bar{X} \\pm 2 \\frac{s}{\\sqrt{n}}\\]\nBut I don’t want to estimate the mean, I want to estimate the median."
+  },
+  {
+    "objectID": "slides/bootstrap.html#now-what",
+    "href": "slides/bootstrap.html#now-what",
+    "title": "The bootstrap",
+    "section": "Now what",
+    "text": "Now what\n\n\n\n\nI give you a sample of size 500, you give me the sample median.\nHow do you get a CI?\nYou can use the bootstrap!\n\n\nset.seed(2022-11-01)\nx <- rexp(n, 1 / 5)\n(med <- median(x)) # sample median\n\n[1] 3.669627\n\nB <- 100\nalpha <- 0.05\nbootMed <- function() median(sample(x, replace = TRUE)) # resample, and get the median\nFhat <- replicate(B, bootMed()) # repeat B times, \"empirical distribution\"\nCI <- 2 * med - quantile(Fhat, probs = c(1 - alpha / 2, alpha / 2))"
+  },
+  {
+    "objectID": "slides/bootstrap.html#slightly-harder-example",
+    "href": "slides/bootstrap.html#slightly-harder-example",
+    "title": "The bootstrap",
+    "section": "Slightly harder example",
+    "text": "Slightly harder example\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCall:\nlm(formula = Hwt ~ 0 + Bwt, data = fatcats)\n\nResiduals:\n    Min      1Q  Median      3Q     Max \n-6.9293 -1.0460 -0.1407  0.8298 16.2536 \n\nCoefficients:\n    Estimate Std. Error t value Pr(>|t|)    \nBwt  3.81895    0.07678   49.74   <2e-16 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 2.549 on 143 degrees of freedom\nMultiple R-squared:  0.9454,    Adjusted R-squared:  0.945 \nF-statistic:  2474 on 1 and 143 DF,  p-value: < 2.2e-16\n\n\n       2.5 %  97.5 %\nBwt 3.667178 3.97073"
+  },
+  {
+    "objectID": "slides/bootstrap.html#when-we-fit-models-we-examine-diagnostics",
+    "href": "slides/bootstrap.html#when-we-fit-models-we-examine-diagnostics",
+    "title": "The bootstrap",
+    "section": "When we fit models, we examine diagnostics",
+    "text": "When we fit models, we examine diagnostics\n\n\n\n\n\n\n\n\n\n\n\nThe tails are too fat, I don’t believe that CI…\n\nWe bootstrap\n\nB <- 500\nbhats <- double(B)\nalpha <- .05\nfor (b in 1:B) {\n  samp <- sample(1:nrow(fatcats), replace = TRUE)\n  newcats <- fatcats[samp, ] # new data\n  bhats[b] <- coef(lm(Hwt ~ 0 + Bwt, data = newcats)) \n}\n\n2 * coef(cats.lm) - # Bootstrap CI\n  quantile(bhats, probs = c(1 - alpha / 2, alpha / 2))\n\n   97.5%     2.5% \n3.654977 3.955927 \n\nconfint(cats.lm) # Original CI\n\n       2.5 %  97.5 %\nBwt 3.667178 3.97073"
+  },
+  {
+    "objectID": "slides/bootstrap.html#an-alternative",
+    "href": "slides/bootstrap.html#an-alternative",
+    "title": "The bootstrap",
+    "section": "An alternative",
+    "text": "An alternative\n\nSo far, I didn’t use any information about the data-generating process.\nWe’ve done the non-parametric bootstrap\nThis is easiest, and most common for most cases.\n\n\nBut there’s another version\n\nYou could try a “parametric bootstrap”\nThis assumes knowledge about the DGP"
+  },
+  {
+    "objectID": "slides/bootstrap.html#same-data",
+    "href": "slides/bootstrap.html#same-data",
+    "title": "The bootstrap",
+    "section": "Same data",
+    "text": "Same data\n\n\nNon-parametric bootstrap\nSame as before\n\nB <- 500\nbhats <- double(B)\nalpha <- .05\nfor (b in 1:B) {\n  samp <- sample(1:nrow(fatcats), replace = TRUE)\n  newcats <- fatcats[samp, ] # new data\n  bhats[b] <- coef(lm(Hwt ~ 0 + Bwt, data = newcats)) \n}\n\n2 * coef(cats.lm) - # NP Bootstrap CI\n  quantile(bhats, probs = c(1-alpha/2, alpha/2))\n\n   97.5%     2.5% \n3.673559 3.970251 \n\nconfint(cats.lm) # Original CI\n\n       2.5 %  97.5 %\nBwt 3.667178 3.97073\n\n\n\nParametric bootstrap\n\nAssume that the linear model is TRUE.\nThen, \\(\\texttt{Hwt}_i = \\widehat{\\beta}\\times \\texttt{Bwt}_i + \\widehat{e}_i\\), \\(\\widehat{e}_i \\approx \\epsilon_i\\)\nThe \\(\\epsilon_i\\) is random \\(\\longrightarrow\\) just resample \\(\\widehat{e}_i\\).\n\n\nB <- 500\nbhats <- double(B)\nalpha <- .05\ncats.lm <- lm(Hwt ~ 0 + Bwt, data = fatcats)\nnewcats <- fatcats\nfor (b in 1:B) {\n  samp <- sample(residuals(cats.lm), replace = TRUE)\n  newcats$Hwt <- predict(cats.lm) + samp # new data\n  bhats[b] <- coef(lm(Hwt ~ 0 + Bwt, data = newcats)) \n}\n\n2 * coef(cats.lm) - # Parametric Bootstrap CI\n  quantile(bhats, probs = c(1 - alpha/2, alpha/2))\n\n   97.5%     2.5% \n3.665531 3.961896"
+  },
+  {
+    "objectID": "slides/bootstrap.html#bootstrap-error-sources",
+    "href": "slides/bootstrap.html#bootstrap-error-sources",
+    "title": "The bootstrap",
+    "section": "Bootstrap error sources",
+    "text": "Bootstrap error sources\nSimulation error:\nusing only \\(B\\) samples to estimate \\(F\\) with \\(\\hat{F}\\).\nStatistical error:\nour data depended on a sample from the population. We don’t have the whole population so we make an error by using a sample\n(Note: this part is what always happens with data, and what the science of statistics analyzes.)\nSpecification error:\nIf we use the parametric bootstrap, and our model is wrong, then we are overconfident."
   },
   {
     "objectID": "slides/git.html#why-version-control",
