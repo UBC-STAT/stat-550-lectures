@@ -2,30 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://github.com/UBC-STAT/stat-550-lectures/index.html</loc>
-    <lastmod>2023-04-04T01:05:38.838Z</lastmod>
+    <lastmod>2023-04-06T13:46:00.372Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/UBC-STAT/stat-550-lectures/slides/bootstrap.html</loc>
-    <lastmod>2023-04-04T01:05:40.526Z</lastmod>
+    <lastmod>2023-04-06T13:46:02.108Z</lastmod>
+  </url>
+  <url>
+    <loc>https://github.com/UBC-STAT/stat-550-lectures/slides/cluster-computing.html</loc>
+    <lastmod>2023-04-06T13:46:02.924Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/UBC-STAT/stat-550-lectures/slides/git.html</loc>
-    <lastmod>2023-04-04T01:05:42.266Z</lastmod>
+    <lastmod>2023-04-06T13:46:03.644Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/UBC-STAT/stat-550-lectures/slides/organization.html</loc>
-    <lastmod>2023-04-04T01:05:42.838Z</lastmod>
+    <lastmod>2023-04-06T13:46:04.236Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/UBC-STAT/stat-550-lectures/slides/presentations.html</loc>
-    <lastmod>2023-04-04T01:05:43.294Z</lastmod>
+    <lastmod>2023-04-06T13:46:04.720Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/UBC-STAT/stat-550-lectures/slides/syllabus.html</loc>
-    <lastmod>2023-04-04T01:05:43.630Z</lastmod>
+    <lastmod>2023-04-06T13:46:05.112Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/UBC-STAT/stat-550-lectures/slides/unit-tests.html</loc>
-    <lastmod>2023-04-04T01:05:44.310Z</lastmod>
+    <lastmod>2023-04-06T13:46:05.824Z</lastmod>
   </url>
 </urlset>

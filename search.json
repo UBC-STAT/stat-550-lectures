@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "Lecture slides",
     "section": "",
-    "text": "Syllabus and introduction\nGit and Github\nOrganization\nGiving talks\nUnit tests\nBootstrap\nModel selection\nTesting non-nested models, contrasts, dummy variables, interpreting coefficients in non-Gaussian regression.\nRegularization and modern methods\nReading statistical papers  \nCluster computing"
+    "text": "Syllabus and introduction\nGit and Github\nOrganization\nGiving talks\nUnit tests\nBootstrap\nCluster computing\nModel selection\nTesting non-nested models, contrasts, dummy variables, interpreting coefficients in non-Gaussian regression.\nRegularization and modern methods\nReading statistical papers"
   },
   {
     "objectID": "slides/bootstrap.html#section",
@@ -89,6 +89,160 @@
     "title": "The bootstrap",
     "section": "Bootstrap error sources",
     "text": "Bootstrap error sources\nSimulation error:\nusing only \\(B\\) samples to estimate \\(F\\) with \\(\\hat{F}\\).\nStatistical error:\nour data depended on a sample from the population. We don’t have the whole population so we make an error by using a sample\n(Note: this part is what always happens with data, and what the science of statistics analyzes.)\nSpecification error:\nIf we use the parametric bootstrap, and our model is wrong, then we are overconfident."
+  },
+  {
+    "objectID": "slides/cluster-computing.html#ubc-hpc",
+    "href": "slides/cluster-computing.html#ubc-hpc",
+    "title": "Cluster computing (at UBC)",
+    "section": "UBC HPC",
+    "text": "UBC HPC\n3 potentially useful systems:\n\nDepartment VM\nUBC ARC Sockeye\nCompute Canada\n\nI’ve only used 1 and 3. I mainly use 3.\nAccessing\nAs far as I know, access for students requires “faculty” support\n\nEmail The/Binh.\nPossible you can access without a faculty PI.\nEmail your advisor to ask for an account.\n\nThe rest of this will focus on 3."
+  },
+  {
+    "objectID": "slides/cluster-computing.html#prerequisites",
+    "href": "slides/cluster-computing.html#prerequisites",
+    "title": "Cluster computing (at UBC)",
+    "section": "Prerequisites",
+    "text": "Prerequisites\n\n\n\nCommand line interface (Terminal on Mac)\n(optional) helpful to have ftp client. (Cyberduck)\nGlobus Connect. File transfer approved by CC.\n\n\nUseful CL commands\n\ncd ~/path/to/directory\n\ncp file/to/copy.txt duplicated/as/copy1.txt\n\nrm file/to/delete.txt\n\nrm -r dir/to/delete/\n\nls -a # list all files"
+  },
+  {
+    "objectID": "slides/cluster-computing.html#how-to-connect",
+    "href": "slides/cluster-computing.html#how-to-connect",
+    "title": "Cluster computing (at UBC)",
+    "section": "How to connect",
+    "text": "How to connect\nLogin to a system:\n\nssh dajmcdon@cedar.computecanada.ca\n\n\nUpon login, you’re on a “head” or “login” node.\nJobs > 30min will be killed.\nYou can continuously run short interactive jobs."
+  },
+  {
+    "objectID": "slides/cluster-computing.html#rule-1",
+    "href": "slides/cluster-computing.html#rule-1",
+    "title": "Cluster computing (at UBC)",
+    "section": "Rule 1",
+    "text": "Rule 1\n\n\n\n\n\n\nTip\n\n\nIf you’re doing work for school: run it on one of these machines.\n\n\n\n\nYes, there is overhead to push data over and pull results back.\nBut CC/Sockeye is much faster than your machine.\nAnd this won’t lock up your laptop for 4 hours while you run the job.\nIt’s also a good experience.\nYou can log out and leave the job running. Just log back in to see if it’s done (you should always have some idea how long it will take)"
+  },
+  {
+    "objectID": "slides/cluster-computing.html#modules",
+    "href": "slides/cluster-computing.html#modules",
+    "title": "Cluster computing (at UBC)",
+    "section": "Modules",
+    "text": "Modules\n\nOnce you connect with ssh:\nThere are no Applications loaded.\nYou must tell the system what you want.\nThe command is module load r or module load sas\nIf you find yourself using the same modules all the time:\n\n\nmodule load StdEnv/2020 r gurobi python # stuff I use\n\nmodule save my_modules # save loaded modules\n\nmodule restore my_modules # on login, load the usual set"
+  },
+  {
+    "objectID": "slides/cluster-computing.html#running-something-interactively",
+    "href": "slides/cluster-computing.html#running-something-interactively",
+    "title": "Cluster computing (at UBC)",
+    "section": "Running something interactively",
+    "text": "Running something interactively\n\nLogin\nLoad modules\nRequest interactive compute\n\n\nsalloc --time=1:0:0 --ntasks=1 --account=def-dajmcdon --mem-per-cpu=4096M\n\nThis says:\n\nAllocate 1 hour\nOn 1 CPU\nFor the user def-dajmcdon (that’s me, accounts start with def-)\n4GB of RAM\n\nThen I would start R\n\nr\n\nAnd run whatever I want. If it takes more than an hour or needs more than 4GB of memory, it’ll quit."
+  },
+  {
+    "objectID": "slides/cluster-computing.html#interactive-jobs",
+    "href": "slides/cluster-computing.html#interactive-jobs",
+    "title": "Cluster computing (at UBC)",
+    "section": "Interactive jobs",
+    "text": "Interactive jobs\n\nOnce started they’ll just go\nYou can do whatever else you want on your machine\nBut you can’t kill the connection\nSo don’t close your laptop and walk away\nThis is not typically the best use of this resource.\nBetter is likely syzygy.\n\nAlthough, syzygy has little memory and little storage, so it won’t do intensive tasks\nI think your home dir is limited to 1GB"
+  },
+  {
+    "objectID": "slides/cluster-computing.html#big-memory-jobs",
+    "href": "slides/cluster-computing.html#big-memory-jobs",
+    "title": "Cluster computing (at UBC)",
+    "section": "Big memory jobs",
+    "text": "Big memory jobs\n\nPossible you can do this interactively, but discouraged\n\n\n\n\n\n\n\nExample\n\n\n\nNeuroscience project\nDataset is about 10GB\nPeak memory usage during analysis is about 24GB\nCan’t do this on my computer\nWant to offload onto CC.ca\n\n\n\n\n\nWrite a R/python script that does the whole analysis and saves the output.\nYou need to ask CC to run the script for you."
+  },
+  {
+    "objectID": "slides/cluster-computing.html#the-scheduler",
+    "href": "slides/cluster-computing.html#the-scheduler",
+    "title": "Cluster computing (at UBC)",
+    "section": "The scheduler",
+    "text": "The scheduler\n\nWhile you can log in to CC and “do stuff”\nResources are limited.\nThere’s a process that determines who gets resources when.\nTechnically the salloc command we used before requested some resources.\nIt may “sit” until the resources you want are available, but probably not long.\nAnything else has to go through the scheduler.\nCompute Canada uses the slurm scheduler"
+  },
+  {
+    "objectID": "slides/cluster-computing.html#example-script",
+    "href": "slides/cluster-computing.html#example-script",
+    "title": "Cluster computing (at UBC)",
+    "section": "Example script",
+    "text": "Example script\n\n#!/bin/bash\n\n#SBATCH --account=def-dajmcdon\n#SBATCH --job-name=dlbcl-suffpcr\n#SBATCH --output=%x-%j.out\n#SBATCH --error=%x-%j.out\n#SBATCH --time=10:00:00\n#SBATCH --ntasks=1\n#SBATCH --cpus-per-task=1\n#SBATCH --mem-per-cpu=32G\n\nRscript -e 'source(\"dlbcl-nocv.R\")'\n\n\nThis asks for 10 hours of compute time with 32GB of memory\nThe job-name/output/error fields are for convenience.\nIf unspecified, I’ll end up with files named things like jobid60607-60650934.out"
+  },
+  {
+    "objectID": "slides/cluster-computing.html#submitting-and-other-useful-commands",
+    "href": "slides/cluster-computing.html#submitting-and-other-useful-commands",
+    "title": "Cluster computing (at UBC)",
+    "section": "Submitting and other useful commands",
+    "text": "Submitting and other useful commands\n\nSuppose that slurm script is saved as dlbcl-slurm.sh\n\n\nsbatch dlbcl-slurm.sh # submit the job to the scheduler\n\nsqueue -u $USER # show status of your jobs ($USER is an env variable)\n\nscancel -u $USER # cancel all your jobs\n\nscancel -t PENDING -u $USER # cancel all your pending jobs\n\n\n\n\n\n\n\nImportant\n\n\n\nJobs inherit environment variables. So if you load modules, then submit, your modules are available to run.\nOn Cedar, jobs cannot run from ~/. It must be run from ~/scratch/ or ~/projects/."
+  },
+  {
+    "objectID": "slides/cluster-computing.html#types-of-jobs",
+    "href": "slides/cluster-computing.html#types-of-jobs",
+    "title": "Cluster computing (at UBC)",
+    "section": "Types of jobs",
+    "text": "Types of jobs\n\nBig jobs (need lots of RAM)\nGPU jobs (you want deep learning, I don’t know how to do this)\nOther jobs with internal parallelism (I almost never do this)\nEmbarrassingly parallel jobs (I do this all the time)"
+  },
+  {
+    "objectID": "slides/cluster-computing.html#simple-parallelization",
+    "href": "slides/cluster-computing.html#simple-parallelization",
+    "title": "Cluster computing (at UBC)",
+    "section": "Simple parallelization",
+    "text": "Simple parallelization\n\nMost of my major computing needs are “embarrassingly parallel”\nI want to run a few algorithms on a bunch of different simulated datasets under different parameter configurations.\nPerhaps run the algos on some real data too.\nR has packages which are good for parallelization (snow, snowfall, Rmpi, parallel)\nThis is how I originally learned to do parallel computing. But these packages are not good for the cluster\nThey’re fine for your machine, but we’ve already decided we’re not going to do that anymore."
+  },
+  {
+    "objectID": "slides/cluster-computing.html#example-of-the-bad-parallelism",
+    "href": "slides/cluster-computing.html#example-of-the-bad-parallelism",
+    "title": "Cluster computing (at UBC)",
+    "section": "Example of the bad parallelism",
+    "text": "Example of the bad parallelism\nTorque script\n\n#!/bin/bash  \n#PBS -l nodes=8:ppn=8,walltime=200:00:00\n#PBS -m abe\n#PBS -n ClusterPermute \n#PBS -j oe \n\nmpirun -np 64 -machinefile $PBS_NODEFILE R CMD BATCH ClusterPermute.R\n\n\nTorque is a different scheduler. UBC ARC Sockeye uses Torque.\nLooks much like Slurm.\nHere, ClusterPermute.R uses Rmpi to do “parallel lapply”\nSo I asked for 8 processors on each of 8 nodes.\n\n\nProblem\n\nThe scheduler has to find 8 nodes with 8 available processors before this job will start.\nThis often takes a while, sometimes days.\nBut the code doesn’t need all those things to happen at the same time because the jobs don’t interact."
+  },
+  {
+    "objectID": "slides/cluster-computing.html#batchtools",
+    "href": "slides/cluster-computing.html#batchtools",
+    "title": "Cluster computing (at UBC)",
+    "section": "{batchtools}",
+    "text": "{batchtools}\n\nUsing R (or python) to parallelize is inefficient when there’s a scheduler in the middle.\nBetter is to actually submit 64 different jobs each requiring 1 node\nThen each can get out of the queue whenever a processor becomes available.\nBut that would seem to require writing 64 different slurm scripts\n{batchtools} does this for you, all in R\n\nIt automates writing/submitting slurm/torque scripts.\nIt automatically stores output, and makes it easy to collect.\nIt generates lots of jobs.\nAll this from R directly.\n\n\nIt’s easy to port across machines/schedulers.\nI can test parts (or even run) it on my machine without making changes for the cluster."
+  },
+  {
+    "objectID": "slides/cluster-computing.html#setup-batchtools",
+    "href": "slides/cluster-computing.html#setup-batchtools",
+    "title": "Cluster computing (at UBC)",
+    "section": "Setup {batchtools}",
+    "text": "Setup {batchtools}\n\nCreate a directory where all your jobs will live (in subdirectories). Mine is ~/\nIn that directory, you need a template file. Mine is ~/.batchtools.slurm.tmpl (next slide)\nCreate a configuration file which lives in your home directory. You must name it ~/.batchtools.conf.R.\n\n\n# ~/.batchtools.conf.R\ncluster.functions = makeClusterFunctionsSlurm()"
+  },
+  {
+    "objectID": "slides/cluster-computing.html#batchtools.slurm.tmpl",
+    "href": "slides/cluster-computing.html#batchtools.slurm.tmpl",
+    "title": "Cluster computing (at UBC)",
+    "section": "~/.batchtools.slurm.tmpl",
+    "text": "~/.batchtools.slurm.tmpl\n\n#!/bin/bash\n\n## Job Resource Interface Definition\n##\n## ntasks [integer(1)]:       Number of required tasks,\n##                            Set larger than 1 if you want to further parallelize\n##                            with MPI within your job.\n## ncpus [integer(1)]:        Number of required cpus per task,\n##                            Set larger than 1 if you want to further parallelize\n##                            with multicore/parallel within each task.\n## walltime [integer(1)]:     Walltime for this job, in seconds.\n##                            Must be at least 60 seconds for Slurm to work properly.\n## memory   [integer(1)]:     Memory in megabytes for each cpu.\n##                            Must be at least 100 (when I tried lower values my\n##                            jobs did not start at all).\n##\n## Default resources can be set in your .batchtools.conf.R by defining the variable\n## 'default.resources' as a named list.\n\n<%\n# relative paths are not handled well by Slurm\nlog.file = fs::path_expand(log.file)\n-%>\n\n#SBATCH --account=def-dajmcdon\n#SBATCH --mail-user=daniel@stat.ubc.ca\n#SBATCH --mail-type=ALL\n#SBATCH --job-name=<%= job.name %>\n#SBATCH --output=<%= log.file %>\n#SBATCH --error=<%= log.file %>\n#SBATCH --time=<%= resources$walltime %>\n#SBATCH --ntasks=1\n#SBATCH --cpus-per-task=<%= resources$ncpus %>\n#SBATCH --mem-per-cpu=<%= resources$memory %>\n<%= if (array.jobs) sprintf(\"#SBATCH --array=1-%i\", nrow(jobs)) else \"\" %>\n\n## Run R:\n## we merge R output with stdout from SLURM, which gets then logged via --output option\nRscript -e 'batchtools::doJobCollection(\"<%= uri %>\")'\n\n\nWhen I’m ready to run, I’ll call something like:\n\nbatchtools::submitJobs(job.ids, resources = list(ncpus=1, walltime=\"24:00:00\", memory=\"32G\"))"
+  },
+  {
+    "objectID": "slides/cluster-computing.html#workflow",
+    "href": "slides/cluster-computing.html#workflow",
+    "title": "Cluster computing (at UBC)",
+    "section": "Workflow",
+    "text": "Workflow\nSee the vignette: vignette(\"batchtools\")\nor the\nwebsite\n\nCreate a folder to hold your code. Mine usually contains 2 files, one to set up/run the experiment, one to collect results. Code needed to run the experiment lives in an R package.\nWrite a script to setup the experiment and submit.\nWait.\nCollect your results. Copy back to your machine etc."
+  },
+  {
+    "objectID": "slides/cluster-computing.html#example-1-use-genetics-data-to-viral-load",
+    "href": "slides/cluster-computing.html#example-1-use-genetics-data-to-viral-load",
+    "title": "Cluster computing (at UBC)",
+    "section": "Example 1: Use genetics data to viral load",
+    "text": "Example 1: Use genetics data to viral load\n\nAn “extra” example in a methods paper to appease reviewers\nMethod is:\n\napply a special version of PCA to a big (wide) data set\nDo OLS using the top few PCs\n\nThis is “principle components regression” with sparse principle components.\nGot 413 COVID patients, measure “viral load” and gene expression\n9435 differentially expressed genes.\nThe method needs to form a 10K x 10K matrix multiple times and do an approximate SVD. Requires 32GB memory. Compute time is ~6 hours.\nTwo tuning parameters: \\(\\lambda\\) and number of PCs\nWant to do CV to choose, and then use those on the whole data, describe selected genes."
+  },
+  {
+    "objectID": "slides/cluster-computing.html#example-1-use-genetics-data-to-viral-load-1",
+    "href": "slides/cluster-computing.html#example-1-use-genetics-data-to-viral-load-1",
+    "title": "Cluster computing (at UBC)",
+    "section": "Example 1: Use genetics data to viral load",
+    "text": "Example 1: Use genetics data to viral load\n\nlibrary(batchtools)\n\nreg <- makeExperimentRegistry(\"spcr-genes\", packages = c(\"tidyverse\", \"suffpcr\"))\nx <- readRDS(here::here(\"suffpcr-covid\", \"covid_x.rds\"))\ny <- readRDS(here::here(\"suffpcr-covid\", \"covid_y.rds\"))\n\nsubsample = function(data, job, ratio, ...) {\n  n = nrow(data$x)\n  train = sample(n, floor(n * ratio))\n  test = setdiff(seq_len(n), train)\n  list(test = test, train = train)\n}\n\naddProblem(\"cv\", data = list(x=x, y=y), fun = subsample)\naddProblem(\"full\", data = list(x=x, y=y))\n\naddAlgorithm(\n  \"spcr_cv\", \n  fun = function(job, data, instance,...) {\n    fit <- suffpcr(data$x[instance$train,], data$y[instance$train], lambda_min = 0, lambda_max = 1, ...)\n    valid_err <- colMeans(\n      (data$y[instance$test] - as.matrix(predict(fit, newdata = data$x[instance$test,])))^2, \n      na.rm=TRUE\n    )\n    return(list(fit = fit, valid_err = valid_err))\n  }\n)\n\naddAlgorithm(\n  \"spcr_full\",\n  fun = function(job, data, instance,...) suffpcr(data$x, data$y, lambda_max = 1, lambda_min = 0, ...)\n)\n\npdes_cv <- list(cv = data.frame(ratio = .75))\npdes_full <- list(full = data.frame())\nades_cv <- list(spcr_cv = data.frame(d = c(3, 5, 15)))\nades_full <- list(spcr_full = data.frame(d = c(3, 5, 15)))\naddExperiments(pdes_cv, ades_cv, repls = 5L)\naddExperiments(pdes_full, ades_full)\n\nsubmitJobs(findJobs(), resources = list(ncpus = 1, walltime = \"8:00:00\", memory = \"32G\"))\n\nEnd up with 18 jobs."
+  },
+  {
+    "objectID": "slides/cluster-computing.html#example-2-predicting-future-covid-cases",
+    "href": "slides/cluster-computing.html#example-2-predicting-future-covid-cases",
+    "title": "Cluster computing (at UBC)",
+    "section": "Example 2: Predicting future COVID cases",
+    "text": "Example 2: Predicting future COVID cases\n\nTake a few very simple models and demonstrate that some choices make a big difference in accuracy.\nAt each time \\(t\\), download COVID cases as observed on day \\(t\\) for a bunch of locations\nEstimate a few different models for predicting days \\(t+1,\\ldots,t+k\\)\nStore point and interval forecasts.\nDo this for \\(t\\) every week over a year."
+  },
+  {
+    "objectID": "slides/cluster-computing.html#example-2-predicting-future-covid-cases-1",
+    "href": "slides/cluster-computing.html#example-2-predicting-future-covid-cases-1",
+    "title": "Cluster computing (at UBC)",
+    "section": "Example 2: Predicting future COVID cases",
+    "text": "Example 2: Predicting future COVID cases\n\nfcasters <- list.files(here::here(\"code\", \"forecasters\"))\nfor (fcaster in fcasters) source(here::here(\"code\", \"forecasters\", fcaster))\nregistry_path <- here::here(\"data\", \"forecast-experiments\")\nsource(here::here(\"code\", \"common-pars.R\"))\n\n# Setup the data ----------------------------------------------------\nreg <- makeExperimentRegistry(\n  registry_path,\n  packages = c(\"tidyverse\", \"covidcast\"),\n  source = c(here::here(\"code\", \"forecasters\", fcasters), here::here(\"code\", \"common-pars.R\"))\n)\n\ngrab_data <- function(data, job, forecast_date, ...) {\n  dat <- covidcast_signals(\n    data_sources, signals, as_of = forecast_date, \n    geo_type = geo_type, start_day = \"2020-04-15\") %>% \n    aggregate_signals(format = \"wide\") \n  names(dat)[3:5] <- c(\"value\", \"num\", \"covariate\") # assumes 2 signals\n  dat %>% \n    filter(!(geo_value %in% drop_geos)) %>% \n    group_by(geo_value) %>% \n    arrange(time_value)\n}\naddProblem(\"covidcast_proper\", fun = grab_data, cache = TRUE)\n\n# Algorithm wrappers -----------------------------------------------------\nbaseline <- function(data, job, instance, ...) {\n  instance %>% \n    dplyr::select(geo_value, value) %>% \n    group_modify(prob_baseline, ...)\n}\nar <- function(data, job, instance, ...) {\n  instance %>% \n    dplyr::select(geo_value, time_value, value) %>% \n    group_modify(prob_ar, ...)\n}\nqar <- function(data, job, instance, ...) {\n  instance %>% \n    dplyr::select(geo_value, time_value, value) %>% \n    group_modify(quant_ar, ...)\n}\ngam <- function(data, job, instance, ...) {\n  instance %>% \n    dplyr::select(geo_value, time_value, value) %>%\n    group_modify(safe_prob_gam_ar, ...)\n}\nar_cov <- function(data, job, instance, ...) {\n  instance %>% \n    group_modify(prob_ar_cov, ...)\n}\njoint <- function(data, job, instance, ...) {\n  instance %>% \n    dplyr::select(geo_value, time_value, value) %>% \n    joint_ar(...)\n}\ncorrected_ar <- function(data, job, instance, ...) {\n  instance %>% \n    dplyr::select(geo_value, time_value, num) %>% \n    rename(value = num) %>% \n    corrections_single_signal(cparams) %>% \n    group_modify(prob_ar, ...)\n}\n\naddAlgorithm(\"baseline\", baseline)\naddAlgorithm(\"ar\", ar)\naddAlgorithm(\"qar\", qar)\naddAlgorithm(\"gam\", gam)\naddAlgorithm(\"ar_cov\", ar_cov)\naddAlgorithm(\"joint_ar\", joint)\naddAlgorithm(\"corrections\", corrected_ar)\n\n# Experimental design -----------------------------------------------------\nproblem_design <- list(covidcast_proper = data.frame(forecast_date = forecast_dates))\nalgorithm_design <- list(\n  baseline = CJ(train_window = train_windows, min_train_window = min(train_windows), ahead = aheads),\n  ar = CJ(\n    train_window = train_windows, min_train_window = min(train_windows), \n    lags = lags_list, ahead = aheads\n  ),\n  qar = CJ(\n    train_window = train_windows, min_train_window = min(train_windows),\n    lags = lags_list, ahead = aheads\n  ),\n  gam = CJ(\n    train_window = train_windows, min_train_window = min(train_windows),\n    lags = lags_list, ahead = aheads, df = gam_df\n  ),\n  ar_cov = CJ(\n    train_window = train_windows, min_train_window = min(train_windows), \n    lags = lags_list, ahead = aheads\n  ),\n  joint_ar = CJ(\n    train_window = joint_train_windows, min_train_window = min(joint_train_windows), \n    lags = lags_list, ahead = aheads\n  ),\n  corrections = CJ(\n    train_window = train_windows, min_train_window = min(train_windows),\n    lags = lags_list, ahead = aheads\n  )\n)\n\naddExperiments(problem_design, algorithm_design)\nids <- unwrap(getJobPars()) %>% \n  select(job.id, forecast_date) %>% \n  mutate(chunk = as.integer(as.factor(forecast_date))) %>% \n  select(-forecast_date)\n\n## ~13000 jobs, we don't want to submit that many since they run fast\n## Chunk them into groups by forecast_date (to download once for the group)\n## Results in 68 chunks\n\nsubmitJobs(ids, resources = list(ncpus = 1, walltime = \"4:00:00\", memory = \"16G\"))"
   },
   {
     "objectID": "slides/git.html#why-version-control",
