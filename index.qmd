@@ -15,9 +15,8 @@ format:
 1. [Unit tests](slides/unit-tests.qmd)
 1. [Bootstrap](slides/bootstrap.qmd)
 1. [Cluster computing](slides/cluster-computing.qmd)
-1. Model selection
-1. Testing non-nested models, contrasts, dummy variables, interpreting coefficients in non-Gaussian regression.
-1. Regularization and modern methods
+1. [Time series](slides/time-series.qmd)
+1. Causal inference
 1. Reading statistical papers
 <!--1. [ASDa presentation](slides/asda-slides.pdf)-->
 <!--1. [Jens's presentation](https://mountainmath.ca/stat_550)-->
