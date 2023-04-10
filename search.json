@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "Lecture slides",
     "section": "",
-    "text": "Syllabus and introduction\nGit and Github\nOrganization\nGiving talks\nUnit tests\nBootstrap\nCluster computing\nModel selection\nTesting non-nested models, contrasts, dummy variables, interpreting coefficients in non-Gaussian regression.\nRegularization and modern methods\nReading statistical papers"
+    "text": "Syllabus and introduction\nGit and Github\nOrganization\nGiving talks\nUnit tests\nBootstrap\nCluster computing\nTime series\nCausal inference\nReading statistical papers"
   },
   {
     "objectID": "slides/bootstrap.html#section",
@@ -663,6 +663,167 @@
     "title": "Introduction and Second half pivot",
     "section": "Getting setup",
     "text": "Getting setup\n\nAdd to Slack Channel: https://ubc-stat.slack.com/archives/C04QUDNJG9X\nGithub account: https://github.com/\nAdd to the Github Org — tell me your account\nRStudio synchronization"
+  },
+  {
+    "objectID": "slides/time-series.html#the-general-linear-process",
+    "href": "slides/time-series.html#the-general-linear-process",
+    "title": "Time series, a whirlwind",
+    "section": "The general linear process",
+    "text": "The general linear process\n\nImagine that there is a noise process\n\n\\[\\epsilon_j \\sim \\textrm{N}(0, 1),\\ \\textrm{i.i.d.}\\]\n\nAt time \\(i\\), we observe the sum of all past noise\n\n\\[y_i = \\sum_{j=-\\infty}^0 a_{i+j} \\epsilon_j\\]\n\nWithout some conditions on \\(\\{a_k\\}_{k=-\\infty}^0\\) this process will “run away”\nThe result is “non-stationary” and difficult to analyze.\nStationary means (roughly) that the marginal distribution of \\(y_i\\) does not change with \\(i\\)."
+  },
+  {
+    "objectID": "slides/time-series.html#chasing-stationarity",
+    "href": "slides/time-series.html#chasing-stationarity",
+    "title": "Time series, a whirlwind",
+    "section": "Chasing stationarity",
+    "text": "Chasing stationarity\n\nn <- 1000\nset.seed(12345)\nnseq <- 5\ngenerate_ar <- function(id, n, b) {\n  y <- double(n)\n  y[1] <- rnorm(1)\n  for (i in 2:n) y[i] <- b * y[i - 1] + rnorm(1)\n  tibble(time = 1:n, y = y, id = id)\n}\nstationary <- map_dfr(1:nseq, ~ generate_ar(.x, n = n, b = .99))\nnon_stationary <- map_dfr(1:nseq, ~ generate_ar(.x, n = n, b = 1.01))"
+  },
+  {
+    "objectID": "slides/time-series.html#uses-of-stationarity",
+    "href": "slides/time-series.html#uses-of-stationarity",
+    "title": "Time series, a whirlwind",
+    "section": "Uses of stationarity",
+    "text": "Uses of stationarity\n\nLots of types (weak, strong, in-mean, wide-sense,…)\nnot required for modelling / forecasting\nBut assuming stationarity gives some important guarantees\nUsually work with stationary processes"
+  },
+  {
+    "objectID": "slides/time-series.html#standard-models",
+    "href": "slides/time-series.html#standard-models",
+    "title": "Time series, a whirlwind",
+    "section": "Standard models",
+    "text": "Standard models\nAR(p)\nSuppose \\(\\epsilon_i\\) are i.i.d. N(0, 1) (distn is convenient, but not required)\n\\[y_i = \\mu + a_1 y_{i-1} + \\cdots + a_p y_{i-p} + \\epsilon_i\\]\n\nThis is a special case of the general linear process\nYou can recursively substitute this defn into itself to get that equation\n\nEasy to estimate the a’s given a realization.\n\ny <- arima.sim(list(ar = c(.7, -.1)), n = 1000)\nY <- y[3:1000]\nX <- cbind(lag1 = y[2:999], lag2 = y[1:998])\nsummary(lm(Y ~ X + 0))\n\n\nCall:\nlm(formula = Y ~ X + 0)\n\nResiduals:\n    Min      1Q  Median      3Q     Max \n-3.6164 -0.6638  0.0271  0.6456  3.8367 \n\nCoefficients:\n      Estimate Std. Error t value Pr(>|t|)    \nXlag1  0.66931    0.03167  21.134   <2e-16 ***\nXlag2 -0.04856    0.03167  -1.533    0.126    \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 0.9899 on 996 degrees of freedom\nMultiple R-squared:  0.4085,    Adjusted R-squared:  0.4073 \nF-statistic:   344 on 2 and 996 DF,  p-value: < 2.2e-16"
+  },
+  {
+    "objectID": "slides/time-series.html#arp-1",
+    "href": "slides/time-series.html#arp-1",
+    "title": "Time series, a whirlwind",
+    "section": "AR(p)",
+    "text": "AR(p)\n\nThe estimate isn’t that accurate because the residuals (not the \\(\\epsilon\\)’s) are correlated.\n(Usually, you get 1/n convergence, here you don’t.)\nAlso, this isn’t the MLE. The likelihood includes \\(p(y_1)\\), \\(p(y_2 | y_1)\\) which lm() ignored.\nThe Std. Errors are unjustified.\nBut that was easy to do.\nThe correct way is\n\n\n\n\nCall:\narima(x = y, order = c(2, 0, 0), include.mean = FALSE)\n\nCoefficients:\n         ar1      ar2\n      0.6686  -0.0485\ns.e.  0.0316   0.0316\n\nsigma^2 estimated as 0.9765:  log likelihood = -1407.34,  aic = 2820.67\n\n\n\nThe resulting estimates and SEs are identical, AFAICS."
+  },
+  {
+    "objectID": "slides/time-series.html#maq",
+    "href": "slides/time-series.html#maq",
+    "title": "Time series, a whirlwind",
+    "section": "MA(q)",
+    "text": "MA(q)\nStart with the general linear process, but truncate the infinite sum.\n\\[y_i = \\sum_{j=-q}^0 a_{i+j} \\epsilon_j\\]\n\nThis is termed a “moving average” process.\nthough \\(a_0 + \\cdots a_{-q}\\) don’t sum to 1.\nCan’t write this easily as a lm()\n\n\ny <- arima.sim(list(ma = c(.9, .6, .1)), n = 1000)\narima(y, c(0, 0, 3), include.mean = FALSE)\n\n\nCall:\narima(x = y, order = c(0, 0, 3), include.mean = FALSE)\n\nCoefficients:\n         ma1     ma2     ma3\n      0.9092  0.6069  0.1198\ns.e.  0.0313  0.0380  0.0311\n\nsigma^2 estimated as 0.8763:  log likelihood = -1353.41,  aic = 2714.82"
+  },
+  {
+    "objectID": "slides/time-series.html#maq-as-an-ar1-hidden-process",
+    "href": "slides/time-series.html#maq-as-an-ar1-hidden-process",
+    "title": "Time series, a whirlwind",
+    "section": "MA(q) as an AR(1) hidden process",
+    "text": "MA(q) as an AR(1) hidden process\nLet \\(X_j = [\\epsilon_{j-1},\\ \\ldots,\\  \\epsilon_{j-q}]\\) and write\n\\[\n\\begin{aligned}\nX_i &= \\begin{bmatrix} a_{i-1} & a_{i-2} & \\cdots & a_{i-q}\\\\ 1 & 0 & \\cdots & 0\\\\ & & \\ddots \\\\ 0 & 0 & \\cdots & 1\\end{bmatrix} X_{i-1} +\n\\begin{bmatrix} a_{i}\\\\ 0 \\\\ \\vdots \\\\ 0 \\end{bmatrix} \\epsilon_i\\\\\ny_i &= \\begin{bmatrix} 1 & 0 & \\cdots 0 \\end{bmatrix} X_i\n\\end{aligned}\n\\]\n\nNow \\(X\\) is a \\(q\\)-dimensional AR(1) (but we don’t see it)\n\\(y\\) is deterministic conditional on \\(X\\)\nThis is the usual way these are estimated using a State-Space Model\nMany time series models have multiple equivalent representations"
+  },
+  {
+    "objectID": "slides/time-series.html#arima",
+    "href": "slides/time-series.html#arima",
+    "title": "Time series, a whirlwind",
+    "section": "ARIMA",
+    "text": "ARIMA\n\nWe’ve been using arima() and arima.sim(), so what is left?\nThe “I” means “integrated”\nIf, for example, we can write \\(z_i = y_i - y_{i-1}\\) and \\(z\\) follows an ARMA(p, q), we say \\(y\\) follows an ARIMA(p, 1, q).\nThe middle term is the degree of differencing"
+  },
+  {
+    "objectID": "slides/time-series.html#other-standard-models",
+    "href": "slides/time-series.html#other-standard-models",
+    "title": "Time series, a whirlwind",
+    "section": "Other standard models",
+    "text": "Other standard models\nSuppose we can write\n\\[\ny_i = T_i + S_i + W_i\n\\]\nThis is the “classical” decomposition of \\(y\\) into a Trend + Seasonal + Noise.\nYou can estimate this with a “Basic Structural Time Series Model” using StrucTS().\nA related, though slightly different model is called the STL decomposition, estimated with stl().\nThis is “Seasonal Decomposition of Time Series by Loess”\n(LOESS is “locally estimated scatterplot smoothing” named/proposed independently by Bill Cleveland though originally proposed about 15 years earlier and called the Savitsky-Golay Filter)"
+  },
+  {
+    "objectID": "slides/time-series.html#quick-example",
+    "href": "slides/time-series.html#quick-example",
+    "title": "Time series, a whirlwind",
+    "section": "Quick example",
+    "text": "Quick example\n\nsts <- StructTS(AirPassengers)\nbc <- stl(AirPassengers, \"periodic\") # use sin/cos to represent the seasonal\ntibble(time = seq(as.Date(\"1949-01-01\"), as.Date(\"1960-12-31\"), by = \"month\"),\n       AP = AirPassengers, StrucTS = fitted(sts)[,1], STL = rowSums(bc$time.series[,1:2])) %>%\n  pivot_longer(-time) %>%\n  ggplot(aes(time, value, color = name)) +\n  geom_line() +\n  theme_bw(base_size = 24) +\n  scale_color_viridis_d(name = \"\") +\n  theme(legend.position = \"bottom\")"
+  },
+  {
+    "objectID": "slides/time-series.html#generic-state-space-model",
+    "href": "slides/time-series.html#generic-state-space-model",
+    "title": "Time series, a whirlwind",
+    "section": "Generic state space model",
+    "text": "Generic state space model\n\n\n\n\\[\\begin{aligned} x_k &\\sim p(x_k | x_{k-1}) \\\\ y_k &\\sim p(y_k | x_k)\\end{aligned}\\]\n\n\n\\(x_k\\) is unobserved, dimension \\(n\\)\n\\(y_k\\) is observed, dimension \\(m\\)\n\\(x\\) process is the transition or process equation\n\\(y\\) is the observation or measurement equation\nBoth are probability distributions that can depend on parameters \\(\\theta\\)\nFor now, assume \\(\\theta\\) is KNOWN\nWe can allow the densities to vary with time."
+  },
+  {
+    "objectID": "slides/time-series.html#goals",
+    "href": "slides/time-series.html#goals",
+    "title": "Time series, a whirlwind",
+    "section": "GOAL(s)",
+    "text": "GOAL(s)\n\nFiltering: given observations, find \\[p(x_k | y_1,\\ldots y_k)\\]\nSmoothing: given observations, find \\[p(x_k | y_1,\\ldots y_T), \\;\\;\\ k < T\\]\nForecasting: given observations, find \\[p(y_{k+1} | y_1,\\ldots,y_k)\\]"
+  },
+  {
+    "objectID": "slides/time-series.html#using-bayes-rule",
+    "href": "slides/time-series.html#using-bayes-rule",
+    "title": "Time series, a whirlwind",
+    "section": "Using Bayes Rule",
+    "text": "Using Bayes Rule\nAssume \\(p(x_0)\\) is known\n\\[\n\\begin{aligned}\np(y_1,\\ldots,y_T\\ |\\ x_1, \\ldots, x_T) &= \\prod_{k=1}^T p(y_k | x_k)\\\\\np(x_0,\\ldots,x_T) &= p(x_0) \\prod_{k=1}^T p(x_k | x_{k-1})\\\\\np(x_0,\\ldots,x_T\\ |\\ y_1,\\ldots,y_T) &= \\frac{p(y_1,\\ldots,y_T\\ |\\ x_1, \\ldots, x_T)p(x_0,\\ldots,x_T)}{p(y_1,\\ldots,y_T)}\\\\ &\\propto p(y_1,\\ldots,y_T\\ |\\ x_1, \\ldots, x_T)p(x_0,\\ldots,x_T)\\end{aligned}\n\\]\nIn principle, if things are nice, you can compute this posterior (thinking of \\(x\\) as unknown parameters)\nBut in practice, computing a big multivariate posterior like this is computationally ill-advised."
+  },
+  {
+    "objectID": "slides/time-series.html#generic-filtering",
+    "href": "slides/time-series.html#generic-filtering",
+    "title": "Time series, a whirlwind",
+    "section": "Generic filtering",
+    "text": "Generic filtering\n\nRecursively build up \\(p(x_k | y_1,\\ldots y_k)\\).\nWhy? Because if we’re collecting data in real time, this is all we need to make forecasts for future data.\n\n\\[\\begin{aligned} &p(y_{T+1} | y_1,\\ldots,y_T)\\\\ &= p(y_{T+1} | x_{T+1}, y_1,\\ldots,y_T)\\\\ &= p(y_{T+1} | x_{T+1} )p(x_{T+1} | y_1,\\ldots,y_T)\\\\ &= p(y_{T+1} | x_{T+1} )p(x_{T+1} | x_T) p(x_T | y_1,\\ldots,y_T)\\end{aligned}\\]\n\nCan continue to iterate if I want to predict \\(h\\) steps ahead\n\n\\[\\begin{aligned} &p(y_{T+h} | y_1,\\ldots,y_T)= p(y_{T+h} | x_{T+h} )\\prod_{j=0}^{h-1} p(x_{T+j+1} | x_{T+j}) p(x_T | y_1,\\ldots,y_T)\\end{aligned}\\]"
+  },
+  {
+    "objectID": "slides/time-series.html#the-filtering-recursion",
+    "href": "slides/time-series.html#the-filtering-recursion",
+    "title": "Time series, a whirlwind",
+    "section": "The filtering recursion",
+    "text": "The filtering recursion\n\nInitialization. Fix \\(p(x_0)\\).\n\nIterate the following for \\(k=1,\\ldots,T\\):\n\nPredict. \\[p(x_k | y_{k-1}) = \\int p(x_k | x_{k-1}) p(x_{k-1} | y_1,\\ldots, y_{k-1})dx_{k-1}.\\]\nUpdate. \\[p(x_k | y_1,\\ldots,y_k) = \\frac{p(y_k | x_k)p(x_k | y_1,\\ldots,y_{k-1})}{p(y_1,\\ldots,y_k)}\\]\n\nIn general, this is somewhat annoying because these integrals may be challenging to solve.\nBut with some creativity, we can use Monte Carlo for everything."
+  },
+  {
+    "objectID": "slides/time-series.html#what-if-we-make-lots-of-assumptions",
+    "href": "slides/time-series.html#what-if-we-make-lots-of-assumptions",
+    "title": "Time series, a whirlwind",
+    "section": "What if we make lots of assumptions?",
+    "text": "What if we make lots of assumptions?\nAssume that \\[\\begin{aligned}p(x_0) &= N(m_0, P_0) \\\\ p_k(x_k\\ |\\ x_{k-1}) &= N(A_{k-1}x_{k-1},\\ Q_{k-1})\\\\ p_k(y_k\\ |\\ x_k) &= N(H_k x_k,\\ R_k)\\end{aligned}.\\]\nThen all the ugly integrals have closed-form representations by properties of conditional Gaussian distributions."
+  },
+  {
+    "objectID": "slides/time-series.html#closed-form-representations",
+    "href": "slides/time-series.html#closed-form-representations",
+    "title": "Time series, a whirlwind",
+    "section": "Closed-form representations",
+    "text": "Closed-form representations\n\n\nDistributions:\n\\[\n\\begin{aligned}\np(x_k | y_1,\\ldots,y_{k-1}) &= N(m^{-}_k, P^{-}_k)\\\\\np(x_k | y_1,\\ldots,y_{k}) &= N(m_k, P_k)\\\\\np(y_{k} | y_1,\\ldots,y_{k-1}) &= N(H_k m^-_k, S_k)\\\\\n\\end{aligned}\n\\] Prediction: \\[\n\\begin{aligned}\nm^-_k &= A_{k-1}m_{k-1}\\\\\nP^-_k &= A_{k-1}P_{k-1}A^\\mathsf{T}_{k-1} + Q_{k-1}\n\\end{aligned}\n\\]\n\nUpdate: \\[\n\\begin{aligned}\nv_k &= y_k - H_k m_k^-\\\\\nS_k &= H_k P_k^- H_k^\\mathsf{T} + R_k\\\\\nK_k &= P^-_k H_k^\\mathsf{T} S_k^{-1}\\\\\nm_k &= m^-_k + K_{k}v_{k}\\\\\nP_k &= P^-_k - K_k S_k K_k^\\mathsf{T}\n\\end{aligned}\n\\]"
+  },
+  {
+    "objectID": "slides/time-series.html#code-or-it-isnt-real-kalman-filter",
+    "href": "slides/time-series.html#code-or-it-isnt-real-kalman-filter",
+    "title": "Time series, a whirlwind",
+    "section": "Code or it isn’t real (Kalman Filter)",
+    "text": "Code or it isn’t real (Kalman Filter)\n\n\n\nkalman <- function(y, m0, P0, A, Q, H, R) {\n  n <- length(y)\n  m <- double(n+1)\n  P <- double(n+1)\n  m[1] <- m0\n  P[1] <- P0\n  for (k in seq(n)) {\n    mm <- A * m[k]\n    Pm <- A * P[k] * A + Q\n    v <- y[k] - H * mm\n    S <- H * Pm * H + R\n    K <- Pm * H / S\n    m[k+1] <- mm + K * v\n    P[k+1] <- Pm - K * S * K\n  }\n  tibble(t = 1:n, m = m[-1], P = P[-1])\n}\n\nset.seed(2022-06-01)\nx <- double(100)\nfor (k in 2:100) x[k] = x[k - 1] + rnorm(1)\ny <- x + rnorm(100, sd = 1)\nkf <- kalman(y, 0, 5, 1, 1, 1, 1)"
+  },
+  {
+    "objectID": "slides/time-series.html#important-notes",
+    "href": "slides/time-series.html#important-notes",
+    "title": "Time series, a whirlwind",
+    "section": "Important notes",
+    "text": "Important notes\n\nSo far, we assumed all parameters were known.\nIn reality, we had 6: m0, P0, A, Q, H, R\nI sort of also think of x as “parameters” in the Bayesian sense\nBy that I mean, “latent variables for which we have prior distributions”\nWhat if we want to estimate them?\n\nBayesian way: m0 and P0 are already the parameters of for the prior on x1. Put priors on the other 4.\nFrequentist way: Just maximize the likelihood. Can technically take P0 \\(\\rightarrow\\infty\\) to remove it and m0\n\nThe Likelihood is produced as a by-product of the Kalman Filter.\n\\[-\\ell(\\theta) = \\sum_{k=1}^T \\left(v_k^\\mathsf{T}S_k^{-1}v_k + \\log |S_k| + m \\log 2\\pi\\right)\\]"
+  },
+  {
+    "objectID": "slides/time-series.html#smoothing",
+    "href": "slides/time-series.html#smoothing",
+    "title": "Time series, a whirlwind",
+    "section": "Smoothing",
+    "text": "Smoothing\n\nWe also want \\(p(x_k | y_1,\\ldots,y_{T})\\)\nFiltering went “forward” in time. At the end we got, \\(p(x_T | y_1,\\ldots,y_{T})\\). Smoothing starts there and goes “backward”\nFor “everything linear Gaussian”, this is again “easy”\nSet \\(m_T^s = m_T\\), \\(P_T^s = P_T\\).\nFor \\(k = T-1,\\ldots,1\\),\n\n\\[\\begin{aligned}\nG_k &= P_k A_k^\\mathsf{T} [P_{k+1}^-]^{-1}\\\\\nm_k^s &= m_k + G_k(m_{k+1}^s - m_{k+1}^-)\\\\\nP_k^s &= P_k + G_k(P_{k+1}^s - P_{k+1}^-)G_k^\\mathsf{T}\\\\\nx_k | y_1,\\ldots,y_T &= N(m^s_k, P_k^s)\n\\end{aligned}\\]"
+  },
+  {
+    "objectID": "slides/time-series.html#comparing-the-filter-and-the-smoother",
+    "href": "slides/time-series.html#comparing-the-filter-and-the-smoother",
+    "title": "Time series, a whirlwind",
+    "section": "Comparing the filter and the smoother",
+    "text": "Comparing the filter and the smoother\n\nSame data, different code (using a package)\n\n\nlibrary(FKF)\nfilt <- fkf(\n  a0 = 0, P0 = matrix(5), dt = matrix(0), ct = matrix(0), \n  Tt = matrix(1), Zt = matrix(1), HHt = matrix(1), GGt = matrix(1), \n  yt = matrix(y, ncol = length(y)))\nsmo <- fks(filt)"
+  },
+  {
+    "objectID": "slides/time-series.html#what-about-non-linear-andor-non-gaussian",
+    "href": "slides/time-series.html#what-about-non-linear-andor-non-gaussian",
+    "title": "Time series, a whirlwind",
+    "section": "What about non-linear and/or non-Gaussian",
+    "text": "What about non-linear and/or non-Gaussian\n\\[\\begin{aligned} x_k &\\sim p(x_k | x_{k-1}) \\\\ y_k &\\sim p(y_k | x_k)\\end{aligned}\\]\nThen we need to solve integrals. This is a pain. We approximate them.\nThese all give approximations to the filtering distribution\n\nExtended Kalman filter - basically do a Taylor approximation, then do Kalman like\nUncented Kalman filter - Approximate integrals with Sigma points\nParticle filter - Sequential Monte Carlo\nBootstrap filter (simple version of SMC)\nLaplace Gaussian filter - Do a Laplace approximation to the distributions"
+  },
+  {
+    "objectID": "slides/time-series.html#the-bootstrap-filter",
+    "href": "slides/time-series.html#the-bootstrap-filter",
+    "title": "Time series, a whirlwind",
+    "section": "The bootstrap filter",
+    "text": "The bootstrap filter\n\nNeed to simulate from the transition distribution (rtrans)\nNeed to evaluate the observation distribution (dobs)\n\n\nboot_filter <- \n  function(y, B = 1000, rtrans, dobs, a0 = 0, P0 = 1, perturb = function(x) x) {\n    n <- length(y)\n    filter_est <- matrix(0, n, B)\n    predict_est <- matrix(0, n, B)\n    init <- rnorm(B, a0, P0)\n    filter_est[1, ] = init\n    for (i in seq(n)) {\n      raw_w <- dobs(y[i], filter_est[i, ])\n      w <- raw_w / sum(raw_w)\n      selection <- sample.int(B, replace = TRUE, prob = w)\n      filter_est[i, ] <- perturb(filter_est[i, selection])\n      predict_est[i, ] <- rtrans(filter_est[i, ])\n      if (i < n) filter_est[i + 1, ] <- predict_est[i, ]\n    }\n    list(filt = filter_est, pred = predict_est)\n  }"
   },
   {
     "objectID": "slides/unit-tests.html#i-urge-you-to-consult",
